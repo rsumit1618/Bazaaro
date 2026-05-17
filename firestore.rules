@@ -1,0 +1,137 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function profile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function role() {
+      return signedIn() ? profile().role : 'guest';
+    }
+
+    function isSuperAdmin() {
+      return role() == 'superAdmin';
+    }
+
+    function isAdmin() {
+      return role() in ['superAdmin', 'admin'];
+    }
+
+    function hasRole(roles) {
+      return signedIn() && role() in roles;
+    }
+
+    function owns(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function activePublicProduct() {
+      return resource.data.status == 'active';
+    }
+
+    match /users/{userId} {
+      allow read: if owns(userId) || isAdmin();
+      allow create: if owns(userId) || isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    match /roles/{roleId} {
+      allow read: if signedIn();
+      allow write: if isSuperAdmin();
+    }
+
+    match /categories/{categoryId} {
+      allow read: if resource.data.isActive == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /brands/{brandId} {
+      allow read: if resource.data.isActive == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /products/{productId} {
+      allow read: if activePublicProduct() || isAdmin() || (signedIn() && resource.data.sellerId == request.auth.uid);
+      allow create: if isAdmin() || hasRole(['seller']);
+      allow update: if isAdmin()
+        || (hasRole(['seller']) && resource.data.sellerId == request.auth.uid && !('approvedBy' in request.resource.data.diff(resource.data).affectedKeys()))
+        || (hasRole(['inventoryManager']) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock', 'updatedAt']))
+        || (hasRole(['contentManager']) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'slug', 'description', 'shortDescription', 'images', 'updatedAt']));
+      allow delete: if isAdmin();
+    }
+
+    match /productVariants/{variantId} {
+      allow read: if true;
+      allow create, update: if isAdmin() || hasRole(['seller', 'inventoryManager']);
+      allow delete: if isAdmin();
+    }
+
+    match /carts/{userId}/items/{itemId} {
+      allow read, write: if owns(userId);
+    }
+
+    match /wishlists/{userId}/items/{itemId} {
+      allow read, write: if owns(userId);
+    }
+
+    match /addresses/{userId}/items/{addressId} {
+      allow read, write: if owns(userId);
+    }
+
+    match /orders/{orderId} {
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin() || hasRole(['orderManager', 'supportAgent']) || (signedIn() && resource.data.userId == request.auth.uid) || (hasRole(['seller']) && request.auth.uid in resource.data.sellerIds);
+      allow update: if isAdmin()
+        || (hasRole(['orderManager']) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['orderStatus', 'assignedStaffId', 'updatedAt']))
+        || (signedIn() && resource.data.userId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['orderStatus', 'updatedAt']));
+      allow delete: if isSuperAdmin();
+
+      match /timeline/{timelineId} {
+        allow read: if signedIn();
+        allow write: if isAdmin() || hasRole(['orderManager']);
+      }
+    }
+
+    match /payments/{paymentId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if resource.data.status == 'approved' || isAdmin();
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+
+    match /coupons/{couponId} {
+      allow read: if resource.data.isActive == true || isAdmin();
+      allow write: if isAdmin() || hasRole(['marketingManager']);
+    }
+
+    match /banners/{bannerId} {
+      allow read: if resource.data.isActive == true || isAdmin();
+      allow write: if isAdmin() || hasRole(['marketingManager']);
+    }
+
+    match /returns/{returnId} {
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin() || hasRole(['supportAgent']) || (signedIn() && resource.data.userId == request.auth.uid);
+      allow update: if isAdmin() || hasRole(['supportAgent']);
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if signedIn() && (resource.data.target == 'all' || resource.data.userId == request.auth.uid || resource.data.role == role());
+      allow write: if isAdmin() || hasRole(['marketingManager']);
+    }
+
+    match /appConfig/main {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+  }
+}

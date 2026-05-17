@@ -1,0 +1,6 @@
+# melos_managed_dependency_overrides: bazaaro_core,bazaaro_domain
+dependency_overrides:
+  bazaaro_core:
+    path: ..\\bazaaro_core
+  bazaaro_domain:
+    path: ..\\bazaaro_domain

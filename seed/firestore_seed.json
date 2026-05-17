@@ -1,0 +1,69 @@
+{
+  "appConfig/main": {
+    "appName": "Bazaaro",
+    "tagline": "Shop Smart. Live Better.",
+    "website": "bazaaro.in",
+    "adminPanel": "admin.bazaaro.in",
+    "sellerPanel": "seller.bazaaro.in",
+    "currency": "INR",
+    "taxEnabled": true,
+    "codEnabled": true,
+    "onlinePaymentEnabled": true,
+    "maintenanceMode": false,
+    "forceUpdate": false,
+    "minAppVersion": "1.0.0",
+    "deliveryCharge": 49,
+    "freeDeliveryAbove": 999,
+    "supportEmail": "support@bazaaro.in",
+    "supportPhone": "+91-90000-00000"
+  },
+  "roles/superAdmin": {
+    "name": "superAdmin",
+    "permissions": ["*"],
+    "isSystemRole": true
+  },
+  "roles/customer": {
+    "name": "customer",
+    "permissions": ["cart:write", "wishlist:write", "orders:create", "reviews:create"],
+    "isSystemRole": true
+  },
+  "categories/mobiles": {
+    "name": "Mobiles",
+    "slug": "mobiles",
+    "parentId": null,
+    "imageUrl": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800",
+    "order": 1,
+    "isActive": true
+  },
+  "brands/bazaaro-select": {
+    "name": "Bazaaro Select",
+    "slug": "bazaaro-select",
+    "logoUrl": "",
+    "isActive": true
+  },
+  "products/demo-watch": {
+    "title": "Smart Fitness Watch",
+    "slug": "smart-fitness-watch",
+    "description": "A daily fitness watch with heart-rate tracking, long battery life, and water resistance.",
+    "shortDescription": "Fitness tracking for everyday life.",
+    "categoryId": "mobiles",
+    "categoryName": "Mobiles",
+    "brandId": "bazaaro-select",
+    "brandName": "Bazaaro Select",
+    "images": ["https://images.unsplash.com/photo-1544117519-31a4b719223d?w=1000"],
+    "price": 1499,
+    "mrp": 2499,
+    "discountPercent": 40,
+    "taxPercent": 18,
+    "sku": "BZ-WATCH-001",
+    "stock": 75,
+    "minStockAlert": 10,
+    "status": "active",
+    "sellerId": "seller-demo",
+    "ratingAvg": 4.4,
+    "ratingCount": 126,
+    "totalSold": 480,
+    "isFeatured": true,
+    "isTrending": true
+  }
+}

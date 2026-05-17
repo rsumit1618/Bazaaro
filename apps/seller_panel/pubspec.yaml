@@ -1,0 +1,14 @@
+name: seller_panel
+publish_to: none
+environment:
+  sdk: ">=3.8.1 <4.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  bazaaro_core:
+    path: ../../packages/bazaaro_core
+  bazaaro_ui:
+    path: ../../packages/bazaaro_ui
+  app_stream_kit: ^0.0.1
+dev_dependencies:
+  flutter_lints: ^5.0.0

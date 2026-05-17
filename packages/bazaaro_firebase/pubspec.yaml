@@ -1,0 +1,22 @@
+name: bazaaro_firebase
+publish_to: none
+environment:
+  sdk: ">=3.8.1 <4.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  bazaaro_core:
+    path: ../bazaaro_core
+  bazaaro_data:
+    path: ../bazaaro_data
+  bazaaro_domain:
+    path: ../bazaaro_domain
+  cloud_firestore: ^5.6.0
+  firebase_auth: ^5.3.4
+  firebase_core: ^3.9.0
+  firebase_messaging: ^15.1.6
+  firebase_storage: ^12.3.7
+  flutter_riverpod: ^2.6.1
+  rxdart: ^0.28.0
+dev_dependencies:
+  flutter_lints: ^5.0.0

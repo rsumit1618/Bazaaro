@@ -1,0 +1,15 @@
+name: bazaaro_ui
+publish_to: none
+environment:
+  sdk: ">=3.8.1 <4.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  bazaaro_core:
+    path: ../bazaaro_core
+  bazaaro_domain:
+    path: ../bazaaro_domain
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+dev_dependencies:
+  flutter_lints: ^5.0.0

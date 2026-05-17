@@ -1,0 +1,25 @@
+name: bazaaro_workspace
+packages:
+  - apps/*
+  - packages/*
+command:
+  bootstrap:
+    usePubspecOverrides: true
+scripts:
+  analyze:
+    run: melos exec -- "flutter analyze"
+    description: Analyze every Flutter package and app.
+  test:
+    run: melos exec --dir-exists=test -- "flutter test"
+    description: Run tests in packages that contain a test directory.
+  format:
+    run: dart format .
+    description: Format the workspace.
+  customer:
+    run: melos exec --scope="customer_app" -- "flutter run"
+  admin:
+    run: melos exec --scope="admin_panel" -- "flutter run -d chrome"
+  seller:
+    run: melos exec --scope="seller_panel" -- "flutter run -d chrome"
+  staff:
+    run: melos exec --scope="staff_app" -- "flutter run"

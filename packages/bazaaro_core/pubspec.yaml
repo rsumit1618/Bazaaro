@@ -1,0 +1,8 @@
+name: bazaaro_core
+publish_to: none
+environment:
+  sdk: ">=3.8.1 <4.0.0"
+dependencies:
+  collection: ^1.19.1
+dev_dependencies:
+  flutter_lints: ^5.0.0

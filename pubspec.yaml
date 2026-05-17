@@ -1,0 +1,28 @@
+name: bazaaro_workspace
+publish_to: none
+environment:
+  sdk: ">=3.8.1 <4.0.0"
+dependencies:
+  bazaaro_auth:
+    path: packages/bazaaro_auth
+  bazaaro_core:
+    path: packages/bazaaro_core
+  bazaaro_data:
+    path: packages/bazaaro_data
+  bazaaro_domain:
+    path: packages/bazaaro_domain
+  bazaaro_firebase:
+    path: packages/bazaaro_firebase
+  bazaaro_ui:
+    path: packages/bazaaro_ui
+  customer_app:
+    path: apps/customer_app
+  admin_panel:
+    path: apps/admin_panel
+  seller_panel:
+    path: apps/seller_panel
+  staff_app:
+    path: apps/staff_app
+dev_dependencies:
+  flutter_lints: ^5.0.0
+  melos: ^6.3.3
