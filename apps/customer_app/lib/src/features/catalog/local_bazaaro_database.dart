@@ -14,7 +14,7 @@ class LocalBazaaroDatabase {
 
   Future<Database> get database async {
     if (_db != null) return _db!;
-    final dbPath = p.join(await getDatabasesPath(), 'bazaaro_demo_v2.db');
+    final dbPath = p.join(await getDatabasesPath(), 'bazaaro_catalog_v1.db');
     _db = await openDatabase(
       dbPath,
       version: 1,
@@ -70,7 +70,7 @@ class LocalBazaaroDatabase {
 
   Future<void> _seedWebIfNeeded() async {
     if (_webRecords != null) return;
-    final raw = await _bundle.loadString('assets/data/bazaaro_dummy_data.json');
+    final raw = await _bundle.loadString('assets/data/bazaaro_catalog_seed.json');
     final json = jsonDecode(raw) as Map<String, Object?>;
     Map<String, Object?> wrap(Map<String, Object?> payload) {
       return {'payload': jsonEncode(payload)};
@@ -100,7 +100,7 @@ class LocalBazaaroDatabase {
         0;
     if (count > 0) return;
 
-    final raw = await _bundle.loadString('assets/data/bazaaro_dummy_data.json');
+    final raw = await _bundle.loadString('assets/data/bazaaro_catalog_seed.json');
     final json = jsonDecode(raw) as Map<String, Object?>;
 
     final categories = (json['categories'] as List)
@@ -139,7 +139,7 @@ const _extraProducts = <Map<String, Object?>>[
     'sku': 'BZ-TOWELS',
     'stock': 80,
     'status': 'active',
-    'sellerId': 'seller-demo',
+    'sellerId': 'seller-bazaaro-select',
     'ratingAvg': 4.2,
     'ratingCount': 650,
     'totalSold': 2810,
@@ -166,7 +166,7 @@ const _extraProducts = <Map<String, Object?>>[
     'sku': 'BZ-KEYMOUSE',
     'stock': 70,
     'status': 'active',
-    'sellerId': 'seller-demo',
+    'sellerId': 'seller-bazaaro-select',
     'ratingAvg': 4.4,
     'ratingCount': 920,
     'totalSold': 4210,
@@ -193,7 +193,7 @@ const _extraProducts = <Map<String, Object?>>[
     'sku': 'BZ-MUG',
     'stock': 150,
     'status': 'active',
-    'sellerId': 'seller-demo',
+    'sellerId': 'seller-bazaaro-select',
     'ratingAvg': 4.3,
     'ratingCount': 410,
     'totalSold': 1980,
@@ -220,7 +220,7 @@ const _extraProducts = <Map<String, Object?>>[
     'sku': 'BZ-SHIRT',
     'stock': 60,
     'status': 'active',
-    'sellerId': 'seller-demo',
+    'sellerId': 'seller-bazaaro-select',
     'ratingAvg': 4.1,
     'ratingCount': 550,
     'totalSold': 1720,
@@ -247,7 +247,7 @@ const _extraProducts = <Map<String, Object?>>[
     'sku': 'BZ-MOIST',
     'stock': 190,
     'status': 'active',
-    'sellerId': 'seller-demo',
+    'sellerId': 'seller-bazaaro-select',
     'ratingAvg': 4.2,
     'ratingCount': 830,
     'totalSold': 5120,
@@ -274,7 +274,7 @@ const _extraProducts = <Map<String, Object?>>[
     'sku': 'BZ-CEREAL',
     'stock': 230,
     'status': 'active',
-    'sellerId': 'seller-demo',
+    'sellerId': 'seller-bazaaro-select',
     'ratingAvg': 4.3,
     'ratingCount': 740,
     'totalSold': 3880,

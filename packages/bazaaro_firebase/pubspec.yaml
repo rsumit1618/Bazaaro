@@ -11,11 +11,10 @@ dependencies:
     path: ../bazaaro_data
   bazaaro_domain:
     path: ../bazaaro_domain
-  cloud_firestore: ^5.6.0
   firebase_auth: ^5.3.4
   firebase_core: ^3.9.0
+  firebase_database: ^11.2.0
   firebase_messaging: ^15.1.6
-  firebase_storage: ^12.3.7
   flutter_riverpod: ^2.6.1
   rxdart: ^0.28.0
 dev_dependencies:

@@ -7,13 +7,12 @@ import 'package:rxdart/rxdart.dart';
 import 'package:bazaaro_firebase/bazaaro_firebase.dart' as bb_firebase;
 
 import 'local_bazaaro_database.dart';
-import 'local_dummy_catalog_repository.dart';
 import 'offline_first_catalog_repository.dart';
 
 final catalogRepositoryProvider = Provider<CatalogRepository>((ref) {
   final localDb = LocalBazaaroDatabase();
   final remoteRepo = bb_firebase.FirebaseCatalogRepository(
-    ref.watch(bb_firebase.firestoreProvider),
+    ref.watch(bb_firebase.realtimeDatabaseProvider),
   );
 
   // If Firebase is not configured/available, the remote repo will fail during sync.
@@ -26,6 +25,10 @@ final catalogRepositoryProvider = Provider<CatalogRepository>((ref) {
 final homeFeedProvider = StreamProvider<HomeFeed>(
   (ref) => ref.watch(catalogRepositoryProvider).watchHomeFeed(),
 );
+
+final homeFeedStreamProvider = Provider<Stream<HomeFeed>>((ref) {
+  return ref.watch(catalogRepositoryProvider).watchHomeFeed();
+});
 
 final productDetailProvider = FutureProvider.family<Product?, String>((
   ref,
@@ -61,5 +64,6 @@ class ProductSearchViewModel {
 
   void updateQuery(ProductQuery query) => _query.add(query);
   void search(String value) => updateQuery(ProductQuery(search: value));
+  void searchQuery(ProductQuery query) => updateQuery(query);
   void dispose() => unawaited(_query.close());
 }

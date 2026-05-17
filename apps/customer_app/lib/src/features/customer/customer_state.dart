@@ -1,5 +1,6 @@
 import 'package:bazaaro_domain/bazaaro_domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rxdart/rxdart.dart';
 
 final customerSessionProvider =
     StateNotifierProvider<CustomerSessionController, CustomerSession>((ref) {
@@ -9,13 +10,17 @@ final customerSessionProvider =
 final cartProvider = StateNotifierProvider<CartController, List<CartLine>>((
   ref,
 ) {
-  return CartController();
+  final controller = CartController();
+  ref.onDispose(controller.dispose);
+  return controller;
 });
 
-final ordersProvider = StateNotifierProvider<OrderController, List<DemoOrder>>((
+final ordersProvider = StateNotifierProvider<OrderController, List<StoreOrder>>((
   ref,
 ) {
-  return OrderController();
+  final controller = OrderController();
+  ref.onDispose(controller.dispose);
+  return controller;
 });
 
 class CustomerSession {
@@ -69,17 +74,24 @@ class CartLine {
 }
 
 class CartController extends StateNotifier<List<CartLine>> {
-  CartController() : super(const []);
+  CartController() : super(const []) {
+    _stream.add(state);
+  }
+
+  final _stream = BehaviorSubject<List<CartLine>>.seeded(const []);
+
+  @override
+  Stream<List<CartLine>> get stream => _stream.stream;
 
   void add(Product product) {
     final index = state.indexWhere((line) => line.product.id == product.id);
     if (index == -1) {
-      state = [...state, CartLine(product: product, quantity: 1)];
+      _setState([...state, CartLine(product: product, quantity: 1)]);
       return;
     }
     final next = [...state];
     next[index] = next[index].copyWith(quantity: next[index].quantity + 1);
-    state = next;
+    _setState(next);
   }
 
   void decrement(String productId) {
@@ -91,18 +103,29 @@ class CartController extends StateNotifier<List<CartLine>> {
         next.add(line.copyWith(quantity: line.quantity - 1));
       }
     }
-    state = next;
+    _setState(next);
   }
 
   void remove(String productId) {
-    state = state.where((line) => line.product.id != productId).toList();
+    _setState(state.where((line) => line.product.id != productId).toList());
   }
 
-  void clear() => state = const [];
+  void clear() => _setState(const []);
+
+  void _setState(List<CartLine> value) {
+    state = value;
+    _stream.add(value);
+  }
+
+  @override
+  void dispose() {
+    _stream.close();
+    super.dispose();
+  }
 }
 
-class DemoOrder {
-  const DemoOrder({
+class StoreOrder {
+  const StoreOrder({
     required this.id,
     required this.items,
     required this.total,
@@ -119,26 +142,33 @@ class DemoOrder {
   final String address;
 }
 
-class OrderController extends StateNotifier<List<DemoOrder>> {
+class OrderController extends StateNotifier<List<StoreOrder>> {
   OrderController()
     : super([
-        DemoOrder(
+        StoreOrder(
           id: 'BZ25051601',
           items: const [],
           total: 2298,
           status: 'Delivered',
           createdAt: DateTime.now().subtract(const Duration(days: 2)),
-          address: 'Demo address, Bengaluru, Karnataka',
+          address: 'Indiranagar, Bengaluru, Karnataka',
         ),
-      ]);
+      ]) {
+    _stream.add(state);
+  }
 
-  DemoOrder placeOrder({
+  final _stream = BehaviorSubject<List<StoreOrder>>();
+
+  @override
+  Stream<List<StoreOrder>> get stream => _stream.stream;
+
+  StoreOrder placeOrder({
     required List<CartLine> items,
     required String address,
   }) {
     final subtotal = items.fold<num>(0, (sum, line) => sum + line.total);
     final delivery = subtotal >= 999 ? 0 : 49;
-    final order = DemoOrder(
+    final order = StoreOrder(
       id: 'BZ${DateTime.now().millisecondsSinceEpoch}',
       items: items,
       total: subtotal + delivery,
@@ -147,7 +177,14 @@ class OrderController extends StateNotifier<List<DemoOrder>> {
       address: address,
     );
     state = [order, ...state];
+    _stream.add(state);
     return order;
+  }
+
+  @override
+  void dispose() {
+    _stream.close();
+    super.dispose();
   }
 }
 

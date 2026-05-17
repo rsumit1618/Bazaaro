@@ -1,3 +1,4 @@
+import 'package:app_stream_kit/app_stream_kit.dart';
 import 'package:bazaaro_core/bazaaro_core.dart';
 import 'package:bazaaro_ui/bazaaro_ui.dart';
 import 'package:flutter/material.dart';
@@ -11,40 +12,53 @@ class CartScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cart = ref.watch(cartProvider);
-    if (cart.isEmpty) {
-      return const EmptyState(
+    final controller = ref.watch(cartProvider.notifier);
+    return AppStreamConsumer<List<CartLine>>(
+      stream: controller.stream,
+      initialData: ref.watch(cartProvider),
+      emptyBuilder: (_) => const EmptyState(
         title: 'Your cart is waiting',
         message:
-            'Add products from the home feed and checkout with a demo login.',
+            'Add products from the home feed and checkout with your delivery details.',
         icon: Icons.shopping_cart_outlined,
-      );
-    }
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 920),
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            Text(
-              'Shopping cart',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
-            ),
-            const SizedBox(height: 12),
-            ...cart.map((line) => _CartLineTile(line: line)),
-            const SizedBox(height: 12),
-            _CartSummary(cart: cart),
-            const SizedBox(height: 14),
-            FilledButton.icon(
-              onPressed: () => context.go('/checkout'),
-              icon: const Icon(Icons.shopping_bag_outlined),
-              label: const Text('Proceed to checkout'),
-            ),
-          ],
-        ),
       ),
+      builder: (context, cart) {
+        final items = cart ?? const <CartLine>[];
+        if (items.isEmpty) {
+          return const EmptyState(
+            title: 'Your cart is waiting',
+            message:
+                'Add products from the home feed and checkout with your delivery details.',
+            icon: Icons.shopping_cart_outlined,
+          );
+        }
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 920),
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Text(
+                  'Shopping cart',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ...items.map((line) => _CartLineTile(line: line)),
+                const SizedBox(height: 12),
+                _CartSummary(cart: items),
+                const SizedBox(height: 14),
+                FilledButton.icon(
+                  onPressed: () => context.go('/checkout'),
+                  icon: const Icon(Icons.shopping_bag_outlined),
+                  label: const Text('Proceed to checkout'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -84,7 +98,7 @@ class _CartLineTile extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${line.product.brandName} • ${BazaaroBrand.currency} ${line.product.price}',
+                    '${line.product.brandName} | ${BazaaroBrand.currency} ${line.product.price}',
                   ),
                   const SizedBox(height: 8),
                   Row(

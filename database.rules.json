@@ -1,0 +1,86 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "appConfig": {
+      ".read": true,
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'superAdmin'"
+    },
+    "categories": {
+      ".read": true,
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'contentManager')",
+      ".indexOn": ["isActive", "order"]
+    },
+    "brands": {
+      ".read": true,
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'contentManager')",
+      ".indexOn": ["isActive"]
+    },
+    "banners": {
+      ".read": true,
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'marketingManager')",
+      ".indexOn": ["isActive", "placement"]
+    },
+    "products": {
+      ".read": true,
+      "$productId": {
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'seller' && (!data.exists() || data.child('sellerId').val() === auth.uid || newData.child('sellerId').val() === auth.uid)) || root.child('users').child(auth.uid).child('role').val() === 'contentManager' || root.child('users').child(auth.uid).child('role').val() === 'inventoryManager')"
+      },
+      ".indexOn": ["status", "categoryId", "brandId", "isFeatured", "isTrending", "totalSold"]
+    },
+    "carts": {
+      "$userId": {
+        ".read": "auth != null && auth.uid === $userId",
+        ".write": "auth != null && auth.uid === $userId"
+      }
+    },
+    "wishlists": {
+      "$userId": {
+        ".read": "auth != null && auth.uid === $userId",
+        ".write": "auth != null && auth.uid === $userId"
+      }
+    },
+    "addresses": {
+      "$userId": {
+        ".read": "auth != null && auth.uid === $userId",
+        ".write": "auth != null && auth.uid === $userId"
+      }
+    },
+    "orders": {
+      ".indexOn": ["userId", "orderStatus", "assignedStaffId"],
+      "$orderId": {
+        ".read": "auth != null && (data.child('userId').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'orderManager')",
+        ".write": "auth != null && (newData.child('userId').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'orderManager')"
+      }
+    },
+    "returns": {
+      ".indexOn": ["userId", "status"],
+      "$returnId": {
+        ".read": "auth != null && (data.child('userId').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'supportAgent')",
+        ".write": "auth != null && (newData.child('userId').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'supportAgent')"
+      }
+    },
+    "reviews": {
+      ".read": true,
+      "$reviewId": {
+        ".write": "auth != null && (newData.child('userId').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+      },
+      ".indexOn": ["productId", "userId", "status"]
+    },
+    "users": {
+      "$userId": {
+        ".read": "auth != null && (auth.uid === $userId || root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        ".write": "auth != null && (auth.uid === $userId || root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+      }
+    },
+    "coupons": {
+      ".read": true,
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'marketingManager')",
+      ".indexOn": ["code", "isActive"]
+    },
+    "notifications": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'superAdmin' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'marketingManager')"
+    }
+  }
+}

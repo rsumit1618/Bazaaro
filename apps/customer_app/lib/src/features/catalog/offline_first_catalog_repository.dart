@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:bazaaro_core/bazaaro_core.dart';
 import 'package:bazaaro_domain/bazaaro_domain.dart';
-import 'package:bazaaro_firebase/bazaaro_firebase.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'local_bazaaro_database.dart';
@@ -256,7 +255,7 @@ class OfflineFirstCatalogRepository implements CatalogRepository {
       status: ProductStatus.values.byName(
         payload['status'] as String? ?? ProductStatus.active.name,
       ),
-      sellerId: payload['sellerId'] as String? ?? 'seller-demo',
+      sellerId: payload['sellerId'] as String? ?? 'seller-bazaaro-select',
       ratingAvg: (payload['ratingAvg'] as num? ?? 0).toDouble(),
       ratingCount: payload['ratingCount'] as int? ?? 0,
       totalSold: payload['totalSold'] as int? ?? 0,
@@ -275,7 +274,7 @@ class OfflineFirstCatalogRepository implements CatalogRepository {
     final categories = categoryRows.map(_decodeCategory).toList()
       ..sort((a, b) => a.order.compareTo(b.order));
 
-    // Banners are optional for the demo screens; if missing, keep empty.
+    // Banners are optional for preview screens; if missing, keep empty.
     final banners = bannerRows.map((row) {
       final payload =
           jsonDecode(row['payload']! as String) as Map<String, Object?>;

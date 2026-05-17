@@ -1,20 +1,20 @@
 import 'package:bazaaro_domain/bazaaro_domain.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'firebase_catalog_repository.dart';
 import 'firebase_commerce_repository.dart';
 
-final firestoreProvider = Provider<FirebaseFirestore>(
-  (ref) => FirebaseFirestore.instance,
+final realtimeDatabaseProvider = Provider<FirebaseDatabase>(
+  (ref) => FirebaseDatabase.instance,
 );
 
 final catalogRepositoryProvider = Provider<CatalogRepository>((ref) {
-  return FirebaseCatalogRepository(ref.watch(firestoreProvider));
+  return FirebaseCatalogRepository(ref.watch(realtimeDatabaseProvider));
 });
 
 final commerceRepositoryProvider = Provider<CommerceRepository>((ref) {
-  return FirebaseCommerceRepository(ref.watch(firestoreProvider));
+  return FirebaseCommerceRepository(ref.watch(realtimeDatabaseProvider));
 });
 
 final getHomeFeedUseCaseProvider = Provider(

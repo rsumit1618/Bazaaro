@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_stream_kit/app_stream_kit.dart';
 import 'package:bazaaro_core/bazaaro_core.dart';
 import 'package:bazaaro_domain/bazaaro_domain.dart';
 import 'package:bazaaro_ui/bazaaro_ui.dart';
@@ -15,17 +16,27 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final feed = ref.watch(homeFeedProvider);
     return RefreshIndicator(
       onRefresh: () async => ref.invalidate(homeFeedProvider),
-      child: feed.when(
-        loading: () => const _HomeSkeleton(),
-        error: (error, _) => EmptyState(
+      child: AppStreamBuilder<HomeFeed>(
+        stream: ref.watch(homeFeedStreamProvider),
+        loadingBuilder: (_) => const _HomeSkeleton(),
+        emptyBuilder: (_) => const EmptyState(
+          title: 'No products yet',
+          message: 'Bazaaro products from local DB will appear here.',
+          icon: Icons.storefront_outlined,
+        ),
+        errorBuilder: (context, error, _) => EmptyState(
           title: 'Something went wrong',
           message: error.toString(),
           icon: Icons.error_outline,
         ),
-        data: (data) => _BazaaroHome(feed: data),
+        builder: (context, data) {
+          if (data == null) {
+            return const _HomeSkeleton();
+          }
+          return _BazaaroHome(feed: data);
+        },
       ),
     );
   }

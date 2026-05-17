@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "bazaaro dev": "echo-me-fe509",
+    "default": "echo-me-fe509"
+  },
+  "targets": {},
+  "etags": {}
+}

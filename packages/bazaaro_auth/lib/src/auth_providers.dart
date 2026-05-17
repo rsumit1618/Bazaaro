@@ -10,7 +10,7 @@ final authStateProvider = StreamProvider<User?>(
   (ref) => ref.watch(firebaseAuthProvider).authStateChanges(),
 );
 
-final demoProfileProvider = Provider<UserProfile?>((ref) {
+final currentUserProfileProvider = Provider<UserProfile?>((ref) {
   final user = ref.watch(authStateProvider).valueOrNull;
   if (user == null) return null;
   return UserProfile(

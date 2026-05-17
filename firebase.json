@@ -1,26 +1,19 @@
 {
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
+  "hosting": {
+    "public": "apps/customer_app/build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   },
-  "hosting": [
-    {
-      "target": "customer",
-      "public": "apps/customer_app/build/web",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [{ "source": "**", "destination": "/index.html" }]
-    },
-    {
-      "target": "admin",
-      "public": "apps/admin_panel/build/web",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [{ "source": "**", "destination": "/index.html" }]
-    },
-    {
-      "target": "seller",
-      "public": "apps/seller_panel/build/web",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [{ "source": "**", "destination": "/index.html" }]
-    }
-  ]
+  "database": {
+    "rules": "database.rules.json"
+  }
 }

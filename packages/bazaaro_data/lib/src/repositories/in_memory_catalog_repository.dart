@@ -55,7 +55,7 @@ class InMemoryCatalogRepository implements CatalogRepository {
       sku: 'BZ-$index',
       stock: 20 + index,
       status: ProductStatus.active,
-      sellerId: 'seller-demo',
+      sellerId: 'seller-bazaaro-select',
       ratingAvg: 4.1 + (index % 8) / 10,
       ratingCount: 80 + index,
       totalSold: 300 - index,

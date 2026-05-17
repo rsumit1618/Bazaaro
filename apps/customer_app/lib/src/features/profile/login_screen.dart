@@ -15,11 +15,11 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController(text: 'Aarav Sharma');
-  final _email = TextEditingController(text: 'aarav@example.com');
+  final _email = TextEditingController(text: 'aarav.sharma@bazaaro.in');
   final _password = TextEditingController(text: 'bazaaro123');
   final _phone = TextEditingController(text: '+91 98765 43210');
   final _address = TextEditingController(
-    text: '221B Demo Street, Bengaluru, Karnataka 560001',
+    text: '221B Brigade Road, Bengaluru, Karnataka 560001',
   );
 
   @override
@@ -50,7 +50,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Use any email and password for this dummy demo. Details are required before checkout.',
+                'Enter your delivery details to continue securely to checkout.',
               ),
               const SizedBox(height: 18),
               Form(

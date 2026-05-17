@@ -8,6 +8,9 @@ DateTime dateFromJson(Object? value) {
   if (value is String) {
     return DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
   }
+  if (value is num) {
+    return DateTime.fromMillisecondsSinceEpoch(value.toInt());
+  }
   final dynamic maybeTimestamp = value;
   try {
     return maybeTimestamp.toDate() as DateTime;

@@ -1,3 +1,4 @@
+import 'package:app_stream_kit/app_stream_kit.dart';
 import 'package:bazaaro_core/bazaaro_core.dart';
 import 'package:bazaaro_ui/bazaaro_ui.dart';
 import 'package:flutter/material.dart';
@@ -10,32 +11,45 @@ class OrdersScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final orders = ref.watch(ordersProvider);
-    if (orders.isEmpty) {
-      return const EmptyState(
+    final controller = ref.watch(ordersProvider.notifier);
+    return AppStreamBuilder<List<StoreOrder>>(
+      stream: controller.stream,
+      initialData: ref.watch(ordersProvider),
+      emptyBuilder: (_) => const EmptyState(
         title: 'No orders yet',
         message:
             'Placed, shipped, delivered, cancelled, and return timelines will appear here.',
         icon: Icons.receipt_long_outlined,
-      );
-    }
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 980),
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            Text(
-              'Orders',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
-            ),
-            const SizedBox(height: 12),
-            ...orders.map((order) => _OrderCard(order: order)),
-          ],
-        ),
       ),
+      builder: (context, orders) {
+        final items = orders ?? const <StoreOrder>[];
+        if (items.isEmpty) {
+          return const EmptyState(
+            title: 'No orders yet',
+            message:
+                'Placed, shipped, delivered, cancelled, and return timelines will appear here.',
+            icon: Icons.receipt_long_outlined,
+          );
+        }
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 980),
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Text(
+                  'Orders',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ...items.map((order) => _OrderCard(order: order)),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -43,7 +57,7 @@ class OrdersScreen extends ConsumerWidget {
 class _OrderCard extends StatelessWidget {
   const _OrderCard({required this.order});
 
-  final DemoOrder order;
+  final StoreOrder order;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +83,7 @@ class _OrderCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            Text('${BazaaroBrand.currency} ${order.total} • ${order.address}'),
+            Text('${BazaaroBrand.currency} ${order.total} | ${order.address}'),
             const SizedBox(height: 14),
             const _Timeline(),
           ],

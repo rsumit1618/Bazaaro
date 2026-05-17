@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 
 import 'local_bazaaro_database.dart';
 
-class LocalDummyCatalogRepository implements CatalogRepository {
-  LocalDummyCatalogRepository({AssetBundle? bundle})
+class LocalCatalogRepository implements CatalogRepository {
+  LocalCatalogRepository({AssetBundle? bundle})
     : _database = LocalBazaaroDatabase(bundle: bundle ?? rootBundle);
 
   final LocalBazaaroDatabase _database;
@@ -68,7 +68,7 @@ class LocalDummyCatalogRepository implements CatalogRepository {
         status: ProductStatus.values.byName(
           item['status'] as String? ?? ProductStatus.active.name,
         ),
-        sellerId: item['sellerId'] as String? ?? 'seller-demo',
+        sellerId: item['sellerId'] as String? ?? 'seller-bazaaro-select',
         ratingAvg: (item['ratingAvg'] as num? ?? 0).toDouble(),
         ratingCount: item['ratingCount'] as int? ?? 0,
         totalSold: item['totalSold'] as int? ?? 0,
