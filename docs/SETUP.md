@@ -162,6 +162,8 @@ The output is:
 apps/customer_app/build/web
 ```
 
+For GitHub Pages deployment, see [Commands And Deployment](COMMANDS_AND_DEPLOYMENT.md).
+
 ## Android Build
 
 Debug:

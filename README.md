@@ -85,6 +85,8 @@ For full details, see:
 - [Architecture](docs/ARCHITECTURE.md)
 - [Firebase, Hosting, and Offline Guide](docs/FIREBASE_HOSTING_OFFLINE.md)
 - [Setup Guide](docs/SETUP.md)
+- [Commands and Deployment](docs/COMMANDS_AND_DEPLOYMENT.md)
+- [Screenshots](docs/SCREENSHOTS.md)
 - [Challenges Faced](docs/CHALLENGES.md)
 - [Reviewer Guide](docs/REVIEW_GUIDE.md)
 - [Monorepo Interview Questions](docs/MONOREPO_INTERVIEW_QUESTIONS.md)
