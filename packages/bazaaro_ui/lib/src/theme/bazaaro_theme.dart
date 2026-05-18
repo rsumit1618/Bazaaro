@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
 
+import 'bazaaro_app_theme.dart';
+
+/// Base Material theme used by all apps.
+///
+/// Role-specific layout should be handled by app shells,
+/// not by hardcoded colors spread across widgets.
 class BazaaroTheme {
+  /// Legacy color tokens kept for compatibility.
+  /// New widgets should use [BazaaroAppTheme] instead.
   static const ocean = Color(0xFF10B8D4);
   static const sunshine = Color(0xFFFFD400);
   static const ember = Color(0xFFFF8A00);
   static const ink = Color(0xFF080A0F);
 
   static ThemeData light() {
+    final appTheme = BazaaroAppTheme.light();
     final scheme = ColorScheme.fromSeed(seedColor: ocean, secondary: ember);
+
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
-      scaffoldBackgroundColor: const Color(0xFFF6FAFB),
+      scaffoldBackgroundColor: appTheme.scaffoldBackground,
       appBarTheme: const AppBarTheme(centerTitle: false, elevation: 0),
       cardTheme: CardThemeData(
         elevation: 0,
-        color: Colors.white,
+        color: appTheme.cardBackground,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -35,4 +45,6 @@ class BazaaroTheme {
       ),
     );
   }
+
+  static BazaaroAppTheme get app => BazaaroAppTheme.light();
 }

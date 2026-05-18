@@ -1,30 +1,28 @@
-# TODO - Bazaaro app fixes & Firebase prep
+# Bazaaro Refactor TODO
 
-## Step 1: Reproduce + locate stream error
-- [ ] Search for the exact stack trace / offending code for: “Bad state: Stream has already been listened to”
-- [ ] Identify category → home navigation widgets and provider subscriptions involved
+## Phase 1: Theme + reusable UI foundation
+- [ ] Update `packages/bazaaro_ui/lib/src/theme/bazaaro_theme.dart` to expose UI tokens (no hardcoded UI colors in apps)
+- [ ] Add reusable widgets in `packages/bazaaro_ui`:
+  - [ ] Customer scaffold shell (header/drawer/bottom nav)
+  - [ ] Cart badge widget
+  - [ ] Header nav button widget
+- [ ] Refactor `apps/customer_app/lib/src/app.dart` to use new reusable widgets + theme tokens
+- [ ] Add route-aware back leading when `/search` is open
 
-## Step 2: Fix stream/listener issue (customer_app)
-- [ ] Make streams multicast-safe where needed (shareReplay / avoid re-listening)
-- [ ] Remove/adjust any UI-level cached streams that get listened multiple times during rebuild/navigation
+## Phase 2: Streams/error handling
+- [ ] Locate implementation of `AppStreamBuilder`
+- [ ] Optimize unified loading/empty/error/retry handling
+- [ ] Update customer screens using `AppStreamBuilder` as needed
 
-## Step 3: Fix Search/back navigation + UI
-- [ ] Ensure search route pushes correctly so system back button returns to previous screen
-- [ ] Remove any unintended “black cards” (theme/UI assets) across the customer app
+## Phase 3: Feature base + scalability
+- [ ] Add `BazaaroFeaturePage` base class
+- [ ] Convert a small set of feature screens to use it
 
-## Step 4: Fix home page product grid row coverage
-- [ ] Update `_ProductGrid` so product cards cover the full row width
-- [ ] Verify both wide and non-wide layouts
+## Phase 4: Admin/seller/staff + inventory flow
+- [ ] Scan admin/seller/staff apps for hardcoded UI chrome
+- [ ] Refactor those flows to use shared UI foundation
 
-## Step 5: Theme refresh
-- [ ] Apply consistent improved theme colors across the entire customer app
-
-## Step 6: Firebase realtime integration + image chunking
-- [ ] Implement upload/seed approach: store images in RTDB as base64 chunks array
-- [ ] Implement realtime read: merge chunks -> decode -> show images
-- [ ] Upload all seed data to Firebase in proper structure (realtime)
-
-## Step 7: Run & fix app
-- [ ] Run web app
-- [ ] Fix remaining runtime/layout issues
+## Phase 5: Analysis/testing
+- [ ] Run `flutter analyze`
+- [ ] Run `dart format` / `flutter format`
 
