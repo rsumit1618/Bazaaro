@@ -4,13 +4,25 @@ import 'package:flutter/foundation.dart';
 class BazaaroFirebaseBootstrap {
   const BazaaroFirebaseBootstrap._();
 
+  static var _isInitializing = false;
+
+  static bool get isReady => Firebase.apps.isNotEmpty;
+
   static Future<void> initialize() async {
     if (Firebase.apps.isNotEmpty) return;
-    if (kIsWeb) {
-      await Firebase.initializeApp(options: _webOptions);
-      return;
+    if (_isInitializing) return;
+    _isInitializing = true;
+    try {
+      if (kIsWeb) {
+        await Firebase.initializeApp(options: _webOptions);
+        return;
+      }
+      await Firebase.initializeApp(options: _androidFallbackOptions);
+    } catch (_) {
+      // Bazaaro can run from local catalog data when Firebase is not reachable.
+    } finally {
+      _isInitializing = false;
     }
-    await Firebase.initializeApp(options: _androidFallbackOptions);
   }
 
   static const _webOptions = FirebaseOptions(

@@ -1,8 +1,18 @@
 # Bazaaro
 
-Bazaaro is a production-oriented Flutter e-commerce monorepo for `bazaaro.in`, `admin.bazaaro.in`, and `seller.bazaaro.in`.
+Bazaaro is a Flutter e-commerce monorepo for customer, admin, seller, and staff experiences.
 
 Tagline: **Shop Smart. Live Better.**
+
+Primary domains:
+
+- Customer: `bazaaro.in`
+- Admin: `admin.bazaaro.in`
+- Seller: `seller.bazaaro.in`
+
+## Current Focus
+
+The current implementation focuses on the customer app presentation layer with production-style responsive UI, local seed data, local-first catalog loading, cart/order/login flows, and Firebase Realtime Database integration points.
 
 ## Workspace
 
@@ -20,22 +30,33 @@ bazaaro/
     bazaaro_domain/
     bazaaro_ui/
     bazaaro_firebase/
-  firestore.rules
-  firestore.indexes.json
+  docs/
+  seed/
+  melos.yaml
   firebase.json
-  seed/firestore_seed.json
+  database.rules.json
 ```
 
-## Stack
+## Architecture
 
-- Flutter Web, Android, iOS
-- Melos monorepo
-- Clean Architecture + MVVM
-- Riverpod dependency injection and state management
-- RxDart debounced search, stream composition, cart/filter flows
-- GoRouter route structure
-- Firebase Auth, Firestore, Storage, Cloud Messaging
-- Responsive UI system and shared Bazaaro theme
+Bazaaro uses Clean Architecture with MVVM-style presentation state:
+
+- `bazaaro_core`: brand constants, app config, enums, failures, result helpers, slug utilities.
+- `bazaaro_domain`: entities, repository contracts, use cases.
+- `bazaaro_data`: shared paths, mappers, local/in-memory repository support.
+- `bazaaro_firebase`: Firebase bootstrap, Realtime Database providers, Firebase repositories.
+- `bazaaro_auth`: auth providers and route guard foundations.
+- `bazaaro_ui`: theme, responsive helpers, reusable widgets, shell/navigation UI.
+- `apps/*`: app-specific routing, screens, ViewModels, Riverpod providers, feature composition.
+
+Riverpod is used for dependency injection and state management. RxDart and App Stream Kit are used for debounced search, shared streams, cart/order stream UI, and realtime-friendly UI builders.
+
+## Apps
+
+- `apps/customer_app`: mobile and web shopping app.
+- `apps/admin_panel`: web dashboard shell for admin workflows.
+- `apps/seller_panel`: web dashboard shell for seller workflows.
+- `apps/staff_app`: mobile/web staff shell for inventory, orders, support, marketing, and content roles.
 
 ## Quick Start
 
@@ -43,26 +64,27 @@ bazaaro/
 flutter pub global activate melos
 melos bootstrap
 melos run customer
-melos run admin
-melos run seller
-melos run staff
 ```
 
-On Windows, enable Developer Mode before bootstrapping because Flutter plugin packages require symlink support.
-
-## Apps
-
-- `customer_app`: shopping app for mobile and web with home feed, categories, product grid, cart, orders, profile, and product detail foundations.
-- `admin_panel`: responsive web dashboard for analytics, users, sellers, products, orders, marketing, roles, and configuration.
-- `seller_panel`: responsive seller dashboard for products, variants, stock, orders, earnings, and profile.
-- `staff_app`: mobile/web staff app for inventory, orders, support, marketing, and content workflows.
-
-## Firebase
-
-Security rules, composite indexes, hosting targets, and seed data are included:
+Run on a specific target:
 
 ```bash
-firebase deploy --only firestore:rules,firestore:indexes
+cd apps/customer_app
+flutter run -d chrome
+flutter run -d <android-device-id>
 ```
 
-See `docs/SETUP.md` for project creation commands, FlutterFire setup, hosting targets, and architecture notes.
+On Windows, enable Developer Mode before bootstrapping because Flutter plugin packages use symlinks.
+
+## Firebase And Offline
+
+The app can work with Firebase Realtime Database when configured. It also has a local-first catalog path so the customer UI can still load product/category/banner seed data when Firebase is not ready or the user is offline.
+
+For full details, see:
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Firebase, Hosting, and Offline Guide](docs/FIREBASE_HOSTING_OFFLINE.md)
+- [Setup Guide](docs/SETUP.md)
+- [Challenges Faced](docs/CHALLENGES.md)
+- [Reviewer Guide](docs/REVIEW_GUIDE.md)
+- [Monorepo Interview Questions](docs/MONOREPO_INTERVIEW_QUESTIONS.md)

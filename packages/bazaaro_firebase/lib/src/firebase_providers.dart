@@ -1,20 +1,34 @@
 import 'package:bazaaro_domain/bazaaro_domain.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'firebase_catalog_repository.dart';
 import 'firebase_commerce_repository.dart';
 
-final realtimeDatabaseProvider = Provider<FirebaseDatabase>(
-  (ref) => FirebaseDatabase.instance,
-);
+import 'firebase_bootstrap.dart';
+
+final realtimeDatabaseProvider = Provider<FirebaseDatabase?>((ref) {
+  if (!BazaaroFirebaseBootstrap.isReady || Firebase.apps.isEmpty) {
+    return null;
+  }
+  return FirebaseDatabase.instance;
+});
 
 final catalogRepositoryProvider = Provider<CatalogRepository>((ref) {
-  return FirebaseCatalogRepository(ref.watch(realtimeDatabaseProvider));
+  final database = ref.watch(realtimeDatabaseProvider);
+  if (database == null) {
+    throw StateError('Firebase is not initialized');
+  }
+  return FirebaseCatalogRepository(database);
 });
 
 final commerceRepositoryProvider = Provider<CommerceRepository>((ref) {
-  return FirebaseCommerceRepository(ref.watch(realtimeDatabaseProvider));
+  final database = ref.watch(realtimeDatabaseProvider);
+  if (database == null) {
+    throw StateError('Firebase is not initialized');
+  }
+  return FirebaseCommerceRepository(database);
 });
 
 final getHomeFeedUseCaseProvider = Provider(

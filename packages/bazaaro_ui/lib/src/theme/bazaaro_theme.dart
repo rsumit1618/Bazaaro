@@ -9,38 +9,62 @@ import 'bazaaro_app_theme.dart';
 class BazaaroTheme {
   /// Legacy color tokens kept for compatibility.
   /// New widgets should use [BazaaroAppTheme] instead.
-  static const ocean = Color(0xFF10B8D4);
-  static const sunshine = Color(0xFFFFD400);
-  static const ember = Color(0xFFFF8A00);
-  static const ink = Color(0xFF080A0F);
+  static const ocean = Color(0xFF7C3AED);
+  static const sunshine = Color(0xFFFACC15);
+  static const ember = Color(0xFFF97316);
+  static const ink = Color(0xFF09090B);
 
   static ThemeData light() {
     const appTheme = BazaaroAppTheme.light;
-    final scheme = ColorScheme.fromSeed(seedColor: ocean, secondary: ember);
+    final scheme = ColorScheme.fromSeed(
+      seedColor: appTheme.primary,
+      secondary: appTheme.pink,
+      surface: appTheme.cardBackground,
+    );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
       scaffoldBackgroundColor: appTheme.scaffoldBackground,
-      appBarTheme: const AppBarTheme(centerTitle: false, elevation: 0),
+      appBarTheme: AppBarTheme(
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: appTheme.cardBackground.withValues(alpha: 0.92),
+        surfaceTintColor: Colors.transparent,
+      ),
       cardTheme: CardThemeData(
         elevation: 0,
         color: appTheme.cardBackground,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          backgroundColor: ink,
+          backgroundColor: appTheme.primary,
           foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          minimumSize: const Size(56, 48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(999),
+          ),
+        ),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          backgroundColor: appTheme.cardBackground,
+          foregroundColor: appTheme.brandInk,
+          shape: const CircleBorder(),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.white,
+        fillColor: appTheme.softSurface,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(999),
           borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(999),
+          borderSide: BorderSide(color: appTheme.primary, width: 1.2),
         ),
       ),
     );

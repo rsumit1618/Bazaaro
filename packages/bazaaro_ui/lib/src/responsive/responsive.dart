@@ -25,7 +25,7 @@ class Responsive extends StatelessWidget {
     return switch (breakpointOf(context)) {
       BazaaroBreakpoint.compact => 2,
       BazaaroBreakpoint.medium => 3,
-      BazaaroBreakpoint.expanded => 5,
+      BazaaroBreakpoint.expanded => 4,
     };
   }
 

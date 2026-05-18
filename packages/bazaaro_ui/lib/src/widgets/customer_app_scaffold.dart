@@ -14,7 +14,6 @@ class CustomerAppScaffold extends StatelessWidget {
     required this.isLoggedIn,
     required this.profileLabel,
     required this.profileIcon,
-    this.showBackLeadingOnSearch = true,
   });
 
   final Widget child;
@@ -24,9 +23,6 @@ class CustomerAppScaffold extends StatelessWidget {
   final bool isLoggedIn;
   final String profileLabel;
   final IconData profileIcon;
-
-  /// When true, uses a route-aware back leading on `/search`.
-  final bool showBackLeadingOnSearch;
 
   @override
   Widget build(BuildContext context) {
@@ -68,13 +64,23 @@ class CustomerAppScaffold extends StatelessWidget {
     return Scaffold(
       drawer: isWide ? null : _CustomerDrawer(isLoggedIn: isLoggedIn),
       appBar: AppBar(
-        toolbarHeight: isWide ? 72 : null,
+        toolbarHeight: isWide ? 76 : null,
         leading: _leadingForLocation(
           context: context,
           isWide: isWide,
           location: location,
         ),
         title: _BrandTitle(onTapHome: () => context.go('/')),
+        flexibleSpace: DecoratedBox(
+          decoration: BoxDecoration(
+            color: BazaaroTheme.app.cardBackground.withValues(alpha: 0.86),
+            border: Border(
+              bottom: BorderSide(
+                color: BazaaroTheme.app.border.withValues(alpha: 0.75),
+              ),
+            ),
+          ),
+        ),
         actions: isWide
             ? [
                 BazaaroHeaderNavItem(
@@ -132,14 +138,6 @@ class CustomerAppScaffold extends StatelessWidget {
     required bool isWide,
     required String location,
   }) {
-    if (showBackLeadingOnSearch && location == '/search') {
-      return IconButton(
-        icon: const Icon(Icons.arrow_back_rounded),
-        tooltip: 'Back',
-        onPressed: () => context.canPop() ? context.pop() : context.go('/'),
-      );
-    }
-
     if (isWide) return null;
 
     return Builder(
@@ -190,7 +188,7 @@ class _BrandTitle extends StatelessWidget {
           children: [
             Text('Bazaaro'),
             Text(
-              'Buy & sell with confidence',
+              'Shop Smart. Live Better.',
               style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
             ),
           ],

@@ -7,13 +7,15 @@ import 'package:rxdart/rxdart.dart';
 import 'package:bazaaro_firebase/bazaaro_firebase.dart' as bb_firebase;
 
 import 'local_bazaaro_database.dart';
+import 'local_catalog_repository.dart';
 import 'offline_first_catalog_repository.dart';
 
 final catalogRepositoryProvider = Provider<CatalogRepository>((ref) {
   final localDb = LocalBazaaroDatabase();
-  final remoteRepo = bb_firebase.FirebaseCatalogRepository(
-    ref.watch(bb_firebase.realtimeDatabaseProvider),
-  );
+  final database = ref.watch(bb_firebase.realtimeDatabaseProvider);
+  final remoteRepo = database == null
+      ? LocalCatalogRepository()
+      : bb_firebase.FirebaseCatalogRepository(database);
 
   // If Firebase is not configured/available, the remote repo will fail during sync.
   // The offline repository will still work from local DB.
@@ -22,13 +24,16 @@ final catalogRepositoryProvider = Provider<CatalogRepository>((ref) {
     remoteRepository: remoteRepo,
   );
 });
-final homeFeedProvider = StreamProvider<HomeFeed>(
-  (ref) => ref.watch(catalogRepositoryProvider).watchHomeFeed(),
-);
-
-final homeFeedStreamProvider = Provider<Stream<HomeFeed>>((ref) {
-  return ref.watch(catalogRepositoryProvider).watchHomeFeed();
+final homeFeedStreamProvider = Provider.autoDispose<Stream<HomeFeed>>((ref) {
+  return ref
+      .watch(catalogRepositoryProvider)
+      .watchHomeFeed()
+      .shareReplay(maxSize: 1);
 });
+
+final homeFeedProvider = StreamProvider.autoDispose<HomeFeed>(
+  (ref) => ref.watch(homeFeedStreamProvider),
+);
 
 final productDetailProvider = FutureProvider.family<Product?, String>((
   ref,

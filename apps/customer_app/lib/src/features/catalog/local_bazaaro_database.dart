@@ -14,7 +14,7 @@ class LocalBazaaroDatabase {
 
   Future<Database> get database async {
     if (_db != null) return _db!;
-    final dbPath = p.join(await getDatabasesPath(), 'bazaaro_catalog_v1.db');
+    final dbPath = p.join(await getDatabasesPath(), 'bazaaro_catalog_v2.db');
     _db = await openDatabase(
       dbPath,
       version: 1,

@@ -43,17 +43,27 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         message: error.toString(),
         icon: Icons.error_outline,
         action: FilledButton.icon(
-          onPressed: () => ref.invalidate(homeFeedProvider),
+          onPressed: () {
+            ref.invalidate(homeFeedStreamProvider);
+            ref.invalidate(homeFeedProvider);
+          },
           icon: const Icon(Icons.refresh),
           label: const Text('Retry'),
         ),
       ),
       data: (data) {
+        final compact =
+            Responsive.breakpointOf(context) == BazaaroBreakpoint.compact;
         return Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1180),
+            constraints: const BoxConstraints(maxWidth: 1240),
             child: ListView(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.fromLTRB(
+                compact ? 14 : 0,
+                18,
+                compact ? 14 : 0,
+                28,
+              ),
               children: [
                 TextField(
                   controller: _query,
@@ -65,34 +75,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   onChanged: (_) => _emitCriteria(),
                 ),
                 const SizedBox(height: 12),
-                SizedBox(
-                  height: 42,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: data.categories.length + 1,
-                    separatorBuilder: (_, __) => const SizedBox(width: 8),
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return ChoiceChip(
-                          selected: _categoryId == null,
-                          label: const Text('All'),
-                          onSelected: (_) {
-                            setState(() => _categoryId = null);
-                            _emitCriteria();
-                          },
-                        );
-                      }
-                      final category = data.categories[index - 1];
-                      return ChoiceChip(
-                        selected: _categoryId == category.id,
-                        label: Text(category.name),
-                        onSelected: (_) {
-                          setState(() => _categoryId = category.id);
-                          _emitCriteria();
-                        },
-                      );
-                    },
-                  ),
+                _SearchCategoryBar(
+                  categories: data.categories,
+                  selectedCategoryId: _categoryId,
+                  onAllSelected: () {
+                    setState(() => _categoryId = null);
+                    _emitCriteria();
+                  },
+                  onCategorySelected: (category) {
+                    setState(() => _categoryId = category.id);
+                    _emitCriteria();
+                  },
                 ),
                 const SizedBox(height: 12),
                 SegmentedButton<String>(
@@ -222,6 +215,148 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         result.sort((a, b) => b.totalSold.compareTo(a.totalSold));
     }
     return result;
+  }
+}
+
+class _SearchCategoryBar extends StatelessWidget {
+  const _SearchCategoryBar({
+    required this.categories,
+    required this.selectedCategoryId,
+    required this.onAllSelected,
+    required this.onCategorySelected,
+  });
+
+  final List<Category> categories;
+  final String? selectedCategoryId;
+  final VoidCallback onAllSelected;
+  final ValueChanged<Category> onCategorySelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final items =
+        <({String label, IconData icon, bool selected, VoidCallback onTap})>[
+          (
+            label: 'All',
+            icon: Icons.auto_awesome_rounded,
+            selected: selectedCategoryId == null,
+            onTap: onAllSelected,
+          ),
+          for (final category in categories)
+            (
+              label: category.name,
+              icon: _iconFor(category),
+              selected: selectedCategoryId == category.id,
+              onTap: () => onCategorySelected(category),
+            ),
+        ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final useFullRow = constraints.maxWidth >= 820;
+        if (!useFullRow) {
+          return SizedBox(
+            height: 46,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: items.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return _SearchCategoryPill(
+                  label: item.label,
+                  icon: item.icon,
+                  selected: item.selected,
+                  onTap: item.onTap,
+                );
+              },
+            ),
+          );
+        }
+
+        return Row(
+          children: [
+            for (var i = 0; i < items.length; i++) ...[
+              Expanded(
+                child: _SearchCategoryPill(
+                  label: items[i].label,
+                  icon: items[i].icon,
+                  selected: items[i].selected,
+                  onTap: items[i].onTap,
+                ),
+              ),
+              if (i != items.length - 1) const SizedBox(width: 10),
+            ],
+          ],
+        );
+      },
+    );
+  }
+
+  IconData _iconFor(Category category) {
+    return switch (category.id) {
+      'mobiles' => Icons.phone_android,
+      'fashion' => Icons.checkroom,
+      'home-kitchen' => Icons.kitchen,
+      'beauty' => Icons.spa_outlined,
+      'grocery' => Icons.local_grocery_store_outlined,
+      _ => Icons.devices_other,
+    };
+  }
+}
+
+class _SearchCategoryPill extends StatelessWidget {
+  const _SearchCategoryPill({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final appTheme = BazaaroTheme.app;
+    return Material(
+      color: selected
+          ? appTheme.primary.withValues(alpha: 0.1)
+          : appTheme.cardBackground,
+      shape: StadiumBorder(
+        side: BorderSide(
+          color: selected ? appTheme.primary : appTheme.border,
+          width: selected ? 1.4 : 1,
+        ),
+      ),
+      child: InkWell(
+        customBorder: const StadiumBorder(),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 18, color: selected ? appTheme.primary : null),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                    color: selected ? appTheme.primaryDark : null,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

@@ -27,6 +27,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
         message: error.toString(),
       ),
       data: (data) {
+        final compact =
+            Responsive.breakpointOf(context) == BazaaroBreakpoint.compact;
         final products = _selectedCategoryId == null
             ? data.bestSellers
             : data.bestSellers
@@ -34,9 +36,14 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                   .toList();
         return Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1180),
+            constraints: const BoxConstraints(maxWidth: 1240),
             child: ListView(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.fromLTRB(
+                compact ? 14 : 0,
+                18,
+                compact ? 14 : 0,
+                28,
+              ),
               children: [
                 Text(
                   'Shop by category',
@@ -45,27 +52,16 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                SizedBox(
-                  height: 52,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      final category = data.categories[index];
-                      final selected = category.id == _selectedCategoryId;
-                      return ChoiceChip(
-                        selected: selected,
-                        avatar: Icon(_iconFor(category), size: 18),
-                        label: Text(category.name),
-                        onSelected: (_) => setState(
-                          () => _selectedCategoryId = selected
-                              ? null
-                              : category.id,
-                        ),
-                      );
-                    },
-                    separatorBuilder: (_, __) => const SizedBox(width: 8),
-                    itemCount: data.categories.length,
-                  ),
+                _CategoryFilterBar(
+                  categories: data.categories,
+                  selectedCategoryId: _selectedCategoryId,
+                  iconFor: _iconFor,
+                  onSelected: (category) {
+                    final selected = category.id == _selectedCategoryId;
+                    setState(
+                      () => _selectedCategoryId = selected ? null : category.id,
+                    );
+                  },
                 ),
                 const SizedBox(height: 14),
                 _ProductWrap(products: products),
@@ -86,6 +82,120 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
       'grocery' => Icons.local_grocery_store_outlined,
       _ => Icons.devices_other,
     };
+  }
+}
+
+class _CategoryFilterBar extends StatelessWidget {
+  const _CategoryFilterBar({
+    required this.categories,
+    required this.selectedCategoryId,
+    required this.iconFor,
+    required this.onSelected,
+  });
+
+  final List<Category> categories;
+  final String? selectedCategoryId;
+  final IconData Function(Category category) iconFor;
+  final ValueChanged<Category> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final useFullRow = constraints.maxWidth >= 760;
+        if (!useFullRow) {
+          return SizedBox(
+            height: 48,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: categories.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final category = categories[index];
+                return _CategoryFilterPill(
+                  label: category.name,
+                  icon: iconFor(category),
+                  selected: category.id == selectedCategoryId,
+                  onTap: () => onSelected(category),
+                );
+              },
+            ),
+          );
+        }
+
+        return Row(
+          children: [
+            for (var i = 0; i < categories.length; i++) ...[
+              Expanded(
+                child: _CategoryFilterPill(
+                  label: categories[i].name,
+                  icon: iconFor(categories[i]),
+                  selected: categories[i].id == selectedCategoryId,
+                  onTap: () => onSelected(categories[i]),
+                ),
+              ),
+              if (i != categories.length - 1) const SizedBox(width: 10),
+            ],
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _CategoryFilterPill extends StatelessWidget {
+  const _CategoryFilterPill({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final appTheme = BazaaroTheme.app;
+    return Material(
+      color: selected
+          ? appTheme.primary.withValues(alpha: 0.1)
+          : appTheme.cardBackground,
+      shape: StadiumBorder(
+        side: BorderSide(
+          color: selected ? appTheme.primary : appTheme.border,
+          width: selected ? 1.4 : 1,
+        ),
+      ),
+      child: InkWell(
+        customBorder: const StadiumBorder(),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 18, color: selected ? appTheme.primary : null),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                    color: selected ? appTheme.primaryDark : null,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

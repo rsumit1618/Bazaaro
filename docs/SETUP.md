@@ -1,62 +1,180 @@
-# Bazaaro Setup
+# Bazaaro Setup Guide
 
-## Project Commands
+This guide explains how to run Bazaaro locally and how to connect it to Firebase.
+
+## Prerequisites
+
+- Flutter stable SDK
+- Dart SDK from Flutter
+- Firebase CLI
+- FlutterFire CLI
+- Melos
+- Chrome for web debug
+- Android Studio or a connected Android device for mobile debug
+
+## Install Tools
 
 ```bash
-flutter pub global activate melos
+dart pub global activate melos
+dart pub global activate flutterfire_cli
+npm install -g firebase-tools
+```
+
+## Bootstrap Workspace
+
+From the repository root:
+
+```bash
 melos bootstrap
-melos analyze
-melos test
+```
+
+If packages are missing:
+
+```bash
+flutter pub get
+melos bootstrap
+```
+
+## Run Customer App
+
+Web:
+
+```bash
+cd apps/customer_app
+flutter run -d chrome
+```
+
+Android:
+
+```bash
+cd apps/customer_app
+flutter devices
+flutter run -d <device-id>
+```
+
+## Useful Melos Commands
+
+```bash
 melos run customer
 melos run admin
 melos run seller
 melos run staff
-```
-
-## Flutter Project Creation Commands
-
-```bash
-flutter create --org com.sr --project-name customer_app apps/customer_app
-flutter create --org com.sr --project-name admin_panel apps/admin_panel
-flutter create --org com.sr --project-name seller_panel apps/seller_panel
-flutter create --org com.sr --project-name staff_app apps/staff_app
-flutter create --template=package packages/bazaaro_core
-flutter create --template=package packages/bazaaro_domain
-flutter create --template=package packages/bazaaro_data
-flutter create --template=package packages/bazaaro_ui
-flutter create --template=package packages/bazaaro_auth
-flutter create --template=package packages/bazaaro_firebase
+melos run format
+melos run analyze
+melos run test
 ```
 
 ## Firebase Setup
 
+Bazaaro currently uses Firebase Realtime Database for free-tier-friendly data sync. Firebase Storage is intentionally not required for the current demo because product images are loaded from local seed/image URLs. If image upload is needed later, use Storage or a dedicated image CDN instead of storing large base64 payloads in the database.
+
+### 1. Login
+
 ```bash
 firebase login
-firebase init firestore hosting storage messaging
-flutterfire configure --project=bazaaro --out=packages/bazaaro_firebase/lib/firebase_options.dart
-firebase deploy --only firestore:rules,firestore:indexes
 ```
 
-Configure hosting targets:
+### 2. Select Existing Project
+
+If you are using the existing Echo Firebase project because a new project cannot be created:
 
 ```bash
-firebase target:apply hosting customer bazaaro-in
-firebase target:apply hosting admin admin-bazaaro-in
-firebase target:apply hosting seller seller-bazaaro-in
+firebase use --add
 ```
 
-Replace the placeholder web Firebase options in `packages/bazaaro_firebase/lib/src/firebase_bootstrap.dart` with generated values or import the generated FlutterFire options.
+Choose the existing project and give it an alias such as:
 
-## Architecture
+```text
+bazaaro
+```
 
-Bazaaro uses Clean Architecture with MVVM:
+### 3. Init Firebase
 
-- `bazaaro_core`: branding, enums, failures, result helpers.
-- `bazaaro_domain`: entities, repository contracts, use cases.
-- `bazaaro_data`: Firestore keys, mappers, local development repositories.
-- `bazaaro_firebase`: Firebase repository implementations and providers.
-- `bazaaro_auth`: Firebase Auth providers and role guards.
-- `bazaaro_ui`: theme, responsive system, reusable widgets.
-- `apps/*`: presentation, GoRouter routes, Riverpod providers, ViewModels.
+From the repository root:
 
-Riverpod owns dependency injection. RxDart powers debounced search, combined Firestore streams, cart updates, filters, and realtime UI streams.
+```bash
+firebase init
+```
+
+Select:
+
+- Realtime Database
+- Hosting
+- Emulators, optional for local testing
+
+Do not select Storage if you want to avoid Storage billing/configuration.
+
+### 4. Realtime Database Rules
+
+The repo contains:
+
+```text
+database.rules.json
+```
+
+Deploy rules:
+
+```bash
+firebase deploy --only database
+```
+
+### 5. FlutterFire Configure
+
+Run from the repository root:
+
+```bash
+flutterfire configure --project=<firebase-project-id>
+```
+
+Use Android package:
+
+```text
+com.sr.bazaaro
+```
+
+For web, select/create a web app named:
+
+```text
+Bazaaro Web
+```
+
+Generated options can be wired through `packages/bazaaro_firebase`.
+
+## Web Build
+
+For normal hosting:
+
+```bash
+cd apps/customer_app
+flutter build web --release
+```
+
+For GitHub Pages under a repo path, use:
+
+```bash
+cd apps/customer_app
+flutter build web --release --base-href /bazaaro/
+```
+
+The output is:
+
+```text
+apps/customer_app/build/web
+```
+
+## Android Build
+
+Debug:
+
+```bash
+cd apps/customer_app
+flutter run -d <device-id>
+```
+
+Release signing must be configured in:
+
+```text
+apps/customer_app/android/app/build.gradle.kts
+```
+
+Keep release keystore files out of git.
