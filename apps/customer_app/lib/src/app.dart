@@ -45,8 +45,9 @@ final _router = GoRouter(
         GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
         GoRoute(
           path: '/search',
-          pageBuilder: (context, state) =>
-              const NoTransitionPage(child: SearchScreen()),
+          pageBuilder: (context, state) => NoTransitionPage(
+            child: SearchScreen(initialQuery: state.uri.queryParameters['q']),
+          ),
         ),
       ],
     ),

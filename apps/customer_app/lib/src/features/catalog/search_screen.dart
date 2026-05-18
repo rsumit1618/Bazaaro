@@ -12,7 +12,9 @@ import '../customer/customer_state.dart';
 import 'catalog_providers.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
-  const SearchScreen({super.key});
+  const SearchScreen({super.key, this.initialQuery});
+
+  final String? initialQuery;
 
   @override
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
@@ -31,6 +33,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     _query.dispose();
     unawaited(_criteria.close());
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final initial = widget.initialQuery?.trim();
+    if (initial != null && initial.isNotEmpty) {
+      _query.text = initial;
+      _emitCriteria();
+    }
   }
 
   @override
