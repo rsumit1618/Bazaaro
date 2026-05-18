@@ -25,7 +25,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   );
   String? _categoryId;
   String _sort = 'featured';
-  Stream<List<Product>>? _productsStream;
 
   @override
   void dispose() {
@@ -44,10 +43,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         error: (error, _) =>
             EmptyState(title: 'Search failed', message: error.toString()),
         data: (data) {
-          _productsStream ??= _criteria
-              .debounceTime(const Duration(milliseconds: 220))
-              .map((criteria) => _filter(data.bestSellers, criteria))
-              .shareReplay(maxSize: 1);
           return Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1180),
@@ -120,8 +115,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   ),
                   const SizedBox(height: 16),
                   AppStreamBuilder<List<Product>>(
-                    stream: _productsStream!,
+                    stream: _criteria
+                        .debounceTime(const Duration(milliseconds: 220))
+                        .map((criteria) => _filter(data.bestSellers, criteria))
+                        .shareReplay(maxSize: 1),
                     initialData: _filter(data.bestSellers, _criteria.value),
+
                     emptyBuilder: (_) => const EmptyState(
                       title: 'No products found',
                       message: 'Try a different keyword or filter.',

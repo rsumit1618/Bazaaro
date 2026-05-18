@@ -49,7 +49,11 @@ final _router = GoRouter(
       builder: (_, state) =>
           ProductDetailScreen(productId: state.pathParameters['id']!),
     ),
-    GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
+    GoRoute(
+      path: '/search',
+      pageBuilder: (context, state) =>
+          const NoTransitionPage(child: SearchScreen()),
+    ),
     GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
     GoRoute(path: '/checkout', builder: (_, __) => const CheckoutScreen()),
   ],
@@ -94,13 +98,14 @@ class CustomerScaffold extends ConsumerWidget {
       ),
     ];
     final routes = ['/', '/categories', '/cart', '/orders', '/profile'];
-    final index = routes
-        .indexWhere((route) => route == location)
-        .clamp(0, routes.length - 1);
+    final index = routes.indexWhere((route) => route == location);
+    final safeIndex = index >= 0 ? index : 0;
+
     return Scaffold(
       drawer: isWide ? null : _CustomerDrawer(session: session),
       appBar: AppBar(
         toolbarHeight: isWide ? 72 : null,
+
         leading: isWide
             ? null
             : Builder(
@@ -202,7 +207,7 @@ class CustomerScaffold extends ConsumerWidget {
       bottomNavigationBar: isWide
           ? null
           : NavigationBar(
-              selectedIndex: index,
+              selectedIndex: safeIndex,
               destinations: destinations,
               onDestinationSelected: (value) => context.go(routes[value]),
             ),

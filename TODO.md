@@ -1,42 +1,30 @@
-# Bazaaro - Implementation TODO
+# TODO - Bazaaro app fixes & Firebase prep
 
-## Step 1: Offline-first Catalog
-- [ ] Extend `apps/customer_app/lib/src/features/catalog/local_bazaaro_database.dart`
-  - add upsert/update logic for category/banner/product tables
-  - add indexed pagination-friendly queries (by createdAt/totalSold/price) if needed
-- [ ] Add new cached repository implementation
-  - `apps/customer_app/lib/src/features/catalog/offline_first_catalog_repository.dart`
-  - behavior:
-    - emit cached data immediately (local DB)
-    - listen for connectivity, and when online refresh from Firebase
-    - persist refreshed data into local DB
-    - keep streams in sync with local DB after refresh
+## Step 1: Reproduce + locate stream error
+- [ ] Search for the exact stack trace / offending code for: “Bad state: Stream has already been listened to”
+- [ ] Identify category → home navigation widgets and provider subscriptions involved
 
-## Step 2: Wire repository
-- [ ] Update `apps/customer_app/lib/src/features/catalog/catalog_providers.dart`
-  - swap LocalDummyCatalogRepository -> OfflineFirst repository
-  - keep `homeFeedProvider`, `productDetailProvider`, and search view model working
+## Step 2: Fix stream/listener issue (customer_app)
+- [ ] Make streams multicast-safe where needed (shareReplay / avoid re-listening)
+- [ ] Remove/adjust any UI-level cached streams that get listened multiple times during rebuild/navigation
 
-## Step 3: Pagination + smooth list
-- [ ] Add `PaginatedProductsList` widget (pageSize=20)
-  - load-on-scroll-bottom
-  - “load once” behavior per query when returning from top (no repeated prompt/fetch loop)
-- [ ] Update `HomeScreen` product sections to use pagination
-  - featured, trending, best sellers, local picks (as per available fields)
-- [ ] Update `CategoriesScreen` and `SearchScreen` product grids to use pagination for long lists
+## Step 3: Fix Search/back navigation + UI
+- [ ] Ensure search route pushes correctly so system back button returns to previous screen
+- [ ] Remove any unintended “black cards” (theme/UI assets) across the customer app
 
-## Step 4: Image handling
-- [ ] Update `packages/bazaaro_ui/lib/src/widgets/product_card.dart`
-  - keep CachedNetworkImage caching
-  - apply decode sizing hints to reduce memory without visible quality loss
+## Step 4: Fix home page product grid row coverage
+- [ ] Update `_ProductGrid` so product cards cover the full row width
+- [ ] Verify both wide and non-wide layouts
 
-## Step 5: UI re-skin (premium, not full-black)
-- [ ] Update `apps/customer_app/lib/src/app.dart`
-  - adjust drawer header/background + tile styling using `BazaaroTheme` / gradient accents
-- [ ] Re-check any other “complete black” screens and replace with premium non-black palette
+## Step 5: Theme refresh
+- [ ] Apply consistent improved theme colors across the entire customer app
 
-## Step 6: Test checklist
-- [ ] Online: UI updates and local DB is updated
-- [ ] Offline: UI still shows cached home/search/categories/product detail
-- [ ] Pagination: 20 rows per batch, smooth scroll, no repeated “load” on revisit
-- [ ] Images: no flicker, cached behavior, no visible quality degradation
+## Step 6: Firebase realtime integration + image chunking
+- [ ] Implement upload/seed approach: store images in RTDB as base64 chunks array
+- [ ] Implement realtime read: merge chunks -> decode -> show images
+- [ ] Upload all seed data to Firebase in proper structure (realtime)
+
+## Step 7: Run & fix app
+- [ ] Run web app
+- [ ] Fix remaining runtime/layout issues
+

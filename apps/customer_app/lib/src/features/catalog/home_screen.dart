@@ -223,6 +223,13 @@ class _HeroSlide extends StatelessWidget {
 
   final MarketingBanner banner;
 
+  ImageProvider _safeNetworkImage(String? url) {
+    if (url == null || url.isEmpty) {
+      return const AssetImage('assets/data/bazaaro_catalog_seed.json');
+    }
+    return NetworkImage(url);
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -259,7 +266,7 @@ class _HeroSlide extends StatelessWidget {
                 color: BazaaroTheme.ink,
                 borderRadius: BorderRadius.circular(8),
                 image: DecorationImage(
-                  image: NetworkImage(banner.imageUrl),
+                  image: _safeNetworkImage(banner.imageUrl),
                   fit: BoxFit
                       .cover, // robust to different image sizes/aspect ratios
                   colorFilter: ColorFilter.mode(
@@ -399,9 +406,12 @@ class _CategoryRail extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 28,
-                        backgroundImage: category.imageUrl == null
+                        backgroundImage:
+                            category.imageUrl == null ||
+                                category.imageUrl!.isEmpty
                             ? null
                             : NetworkImage(category.imageUrl!),
+
                         backgroundColor: BazaaroTheme.sunshine,
                       ),
                       const SizedBox(height: 9),
