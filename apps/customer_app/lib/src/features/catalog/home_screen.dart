@@ -30,6 +30,11 @@ class HomeScreen extends ConsumerWidget {
           title: 'Something went wrong',
           message: error.toString(),
           icon: Icons.error_outline,
+          action: FilledButton.icon(
+            onPressed: () => ref.invalidate(homeFeedProvider),
+            icon: const Icon(Icons.refresh),
+            label: const Text('Retry'),
+          ),
         ),
         builder: (context, data) {
           if (data == null) {

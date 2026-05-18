@@ -31,22 +31,10 @@ class OrdersScreen extends ConsumerWidget {
             icon: Icons.receipt_long_outlined,
           );
         }
-        return Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 980),
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                Text(
-                  'Orders',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ...items.map((order) => _OrderCard(order: order)),
-              ],
-            ),
+        return BazaaroFeaturePage(
+          title: 'Orders',
+          child: Column(
+            children: items.map((order) => _OrderCard(order: order)).toList(),
           ),
         );
       },
@@ -112,7 +100,7 @@ class _Timeline extends StatelessWidget {
           .map(
             (step) => Chip(
               backgroundColor: step == 'Delivered'
-                  ? const Color(0xFFFFD400)
+                  ? BazaaroTheme.app.brandAccent
                   : null,
               avatar: const Icon(Icons.done, size: 16),
               label: Text(step),

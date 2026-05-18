@@ -43,17 +43,17 @@ final _router = GoRouter(
         GoRoute(path: '/cart', builder: (_, __) => const CartScreen()),
         GoRoute(path: '/orders', builder: (_, __) => const OrdersScreen()),
         GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
+        GoRoute(
+          path: '/search',
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: SearchScreen()),
+        ),
       ],
     ),
     GoRoute(
       path: '/product/:id',
       builder: (_, state) =>
           ProductDetailScreen(productId: state.pathParameters['id']!),
-    ),
-    GoRoute(
-      path: '/search',
-      pageBuilder: (context, state) =>
-          const NoTransitionPage(child: SearchScreen()),
     ),
     GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
     GoRoute(path: '/checkout', builder: (_, __) => const CheckoutScreen()),
@@ -76,11 +76,11 @@ class CustomerShellWrapper extends ConsumerWidget {
     final profileIcon = session.isLoggedIn ? Icons.person : Icons.login;
 
     return CustomerAppScaffold(
-      child: child,
       cartCount: cartCount,
       isLoggedIn: session.isLoggedIn,
       profileLabel: profileLabel,
       profileIcon: profileIcon,
+      child: child,
     );
   }
 }

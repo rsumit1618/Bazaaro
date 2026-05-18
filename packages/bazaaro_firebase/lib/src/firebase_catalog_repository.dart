@@ -2,6 +2,7 @@ import 'package:bazaaro_core/bazaaro_core.dart';
 import 'package:bazaaro_data/bazaaro_data.dart';
 import 'package:bazaaro_domain/bazaaro_domain.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:rxdart/rxdart.dart';
 
 class FirebaseCatalogRepository implements CatalogRepository {
   FirebaseCatalogRepository(this._db);
@@ -10,21 +11,27 @@ class FirebaseCatalogRepository implements CatalogRepository {
 
   @override
   Stream<HomeFeed> watchHomeFeed() {
-    return _db.ref().onValue.map((event) {
-      final root = _asMap(event.snapshot.value);
-      final banners = _mapChildren(root[FirebaseRealtimePaths.banners])
+    final banners = _db.ref(FirebaseRealtimePaths.banners).onValue.map((event) {
+      return _mapChildren(event.snapshot.value)
           .map((entry) => bannerFromMap(entry.key, entry.value))
           .where((banner) => banner.isActive && banner.placement == 'homeTop')
           .toList();
+    });
 
-      final categories =
-          _mapChildren(root[FirebaseRealtimePaths.categories])
-              .map((entry) => categoryFromMap(entry.key, entry.value))
-              .where((category) => category.isActive)
-              .toList()
-            ..sort((a, b) => a.order.compareTo(b.order));
+    final categories = watchCategories();
 
-      final products = _activeProductsFromRoot(root);
+    final products = _db.ref(FirebaseRealtimePaths.products).onValue.map((
+      event,
+    ) {
+      return _activeProductsFromValue(event.snapshot.value);
+    });
+
+    return Rx.combineLatest3<
+      List<MarketingBanner>,
+      List<Category>,
+      List<Product>,
+      HomeFeed
+    >(banners, categories, products, (banners, categories, products) {
       final featured = products.where((p) => p.isFeatured).take(12).toList();
       final trending = products.where((p) => p.isTrending).take(12).toList();
       final bestSellers = [...products]
@@ -108,8 +115,8 @@ class FirebaseCatalogRepository implements CatalogRepository {
     });
   }
 
-  List<Product> _activeProductsFromRoot(Map<String, Object?> root) {
-    return _mapChildren(root[FirebaseRealtimePaths.products])
+  List<Product> _activeProductsFromValue(Object? value) {
+    return _mapChildren(value)
         .map((entry) => productFromMap(entry.key, entry.value))
         .where((product) => product.status == ProductStatus.active)
         .toList();

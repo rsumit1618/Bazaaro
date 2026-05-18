@@ -136,7 +136,7 @@ class CustomerAppScaffold extends StatelessWidget {
       return IconButton(
         icon: const Icon(Icons.arrow_back_rounded),
         tooltip: 'Back',
-        onPressed: () => context.pop(),
+        onPressed: () => context.canPop() ? context.pop() : context.go('/'),
       );
     }
 
@@ -174,10 +174,10 @@ class _BrandTitle extends StatelessWidget {
               gradient: LinearGradient(colors: BazaaroTheme.app.brandGradient),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Text(
+            child: Text(
               'B',
               style: TextStyle(
-                color: Colors.white,
+                color: BazaaroTheme.app.brandOnInk,
                 fontWeight: FontWeight.w900,
               ),
             ),
@@ -250,10 +250,10 @@ class _CustomerDrawer extends StatelessWidget {
                           colors: BazaaroTheme.app.drawerHeaderGradient,
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'B',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: BazaaroTheme.app.brandOnInk,
                           fontSize: 26,
                           fontWeight: FontWeight.w900,
                         ),
@@ -264,10 +264,10 @@ class _CustomerDrawer extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Bazaaro',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: BazaaroTheme.app.brandOnInk,
                               fontSize: 24,
                               fontWeight: FontWeight.w900,
                             ),
@@ -278,7 +278,11 @@ class _CustomerDrawer extends StatelessWidget {
                                 : 'Buy & sell with confidence',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(color: Colors.white70),
+                            style: TextStyle(
+                              color: BazaaroTheme.app.brandOnInk.withValues(
+                                alpha: 0.72,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -365,12 +369,12 @@ class _MenuPill extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: const Color(0xFFFFD400), size: 16),
+            Icon(icon, color: BazaaroTheme.app.menuPillIcon, size: 16),
             const SizedBox(width: 5),
             Text(
               label,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: BazaaroTheme.app.menuPillForeground,
                 fontWeight: FontWeight.w800,
                 fontSize: 12,
               ),

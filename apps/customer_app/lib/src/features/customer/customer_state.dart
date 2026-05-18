@@ -15,13 +15,13 @@ final cartProvider = StateNotifierProvider<CartController, List<CartLine>>((
   return controller;
 });
 
-final ordersProvider = StateNotifierProvider<OrderController, List<StoreOrder>>((
-  ref,
-) {
-  final controller = OrderController();
-  ref.onDispose(controller.dispose);
-  return controller;
-});
+final ordersProvider = StateNotifierProvider<OrderController, List<StoreOrder>>(
+  (ref) {
+    final controller = OrderController();
+    ref.onDispose(controller.dispose);
+    return controller;
+  },
+);
 
 class CustomerSession {
   const CustomerSession({

@@ -70,7 +70,9 @@ class LocalBazaaroDatabase {
 
   Future<void> _seedWebIfNeeded() async {
     if (_webRecords != null) return;
-    final raw = await _bundle.loadString('assets/data/bazaaro_catalog_seed.json');
+    final raw = await _bundle.loadString(
+      'assets/data/bazaaro_catalog_seed.json',
+    );
     final json = jsonDecode(raw) as Map<String, Object?>;
     Map<String, Object?> wrap(Map<String, Object?> payload) {
       return {'payload': jsonEncode(payload)};
@@ -100,7 +102,9 @@ class LocalBazaaroDatabase {
         0;
     if (count > 0) return;
 
-    final raw = await _bundle.loadString('assets/data/bazaaro_catalog_seed.json');
+    final raw = await _bundle.loadString(
+      'assets/data/bazaaro_catalog_seed.json',
+    );
     final json = jsonDecode(raw) as Map<String, Object?>;
 
     final categories = (json['categories'] as List)

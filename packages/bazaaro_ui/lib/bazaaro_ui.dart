@@ -1,6 +1,7 @@
 export 'src/responsive/responsive.dart';
 export 'src/theme/bazaaro_theme.dart';
 export 'src/widgets/app_shell.dart';
+export 'src/widgets/bazaaro_feature_page.dart';
 export 'src/widgets/cart_badge.dart';
 export 'src/widgets/customer_app_scaffold.dart';
 export 'src/widgets/empty_state.dart';

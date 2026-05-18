@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// UI tokens used by reusable app chrome (scaffolds, headers, drawers, badges).
-///
-/// Apps should not hardcode colors; instead read them from this theme.
+/// UI tokens used by reusable app chrome, feature pages, badges, and cards.
 class BazaaroAppTheme {
   const BazaaroAppTheme({
     required this.brandGradient,
@@ -11,11 +9,15 @@ class BazaaroAppTheme {
     required this.badgeBackground,
     required this.badgeForeground,
     required this.menuPillBackground,
+    required this.menuPillForeground,
+    required this.menuPillIcon,
+    required this.brandInk,
+    required this.brandOnInk,
+    required this.brandAccent,
     required this.cardBackground,
     required this.scaffoldBackground,
   });
 
-  /// Brand gradient for small square logo and similar elements.
   final List<Color> brandGradient;
 
   final Color drawerBackground;
@@ -24,8 +26,13 @@ class BazaaroAppTheme {
   final Color badgeBackground;
   final Color badgeForeground;
 
-  /// Background used for chips like “Deals / Free delivery / COD”.
   final Color menuPillBackground;
+  final Color menuPillForeground;
+  final Color menuPillIcon;
+
+  final Color brandInk;
+  final Color brandOnInk;
+  final Color brandAccent;
 
   final Color cardBackground;
   final Color scaffoldBackground;
@@ -41,6 +48,11 @@ class BazaaroAppTheme {
     badgeBackground: Color(0xFFFF2E00),
     badgeForeground: Colors.white,
     menuPillBackground: Color(0x19FFFFFF),
+    menuPillForeground: Colors.white,
+    menuPillIcon: Color(0xFFFFD400),
+    brandInk: Color(0xFF080A0F),
+    brandOnInk: Colors.white,
+    brandAccent: Color(0xFFFFD400),
     cardBackground: Colors.white,
     scaffoldBackground: Color(0xFFF6FAFB),
   );

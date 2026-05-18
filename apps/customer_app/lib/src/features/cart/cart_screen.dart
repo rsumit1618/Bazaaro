@@ -32,30 +32,22 @@ class CartScreen extends ConsumerWidget {
             icon: Icons.shopping_cart_outlined,
           );
         }
-        return Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 920),
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                Text(
-                  'Shopping cart',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ...items.map((line) => _CartLineTile(line: line)),
-                const SizedBox(height: 12),
-                _CartSummary(cart: items),
-                const SizedBox(height: 14),
-                FilledButton.icon(
-                  onPressed: () => context.go('/checkout'),
-                  icon: const Icon(Icons.shopping_bag_outlined),
-                  label: const Text('Proceed to checkout'),
-                ),
-              ],
-            ),
+        return BazaaroFeaturePage(
+          title: 'Shopping cart',
+          maxWidth: 920,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ...items.map((line) => _CartLineTile(line: line)),
+              const SizedBox(height: 12),
+              _CartSummary(cart: items),
+              const SizedBox(height: 14),
+              FilledButton.icon(
+                onPressed: () => context.go('/checkout'),
+                icon: const Icon(Icons.shopping_bag_outlined),
+                label: const Text('Proceed to checkout'),
+              ),
+            ],
           ),
         );
       },
@@ -148,7 +140,7 @@ class _CartSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFF080A0F),
+      color: BazaaroTheme.app.brandInk,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -164,7 +156,7 @@ class _CartSummary extends StatelessWidget {
                   ? 'Free'
                   : '${BazaaroBrand.currency} ${cart.delivery}',
             ),
-            const Divider(color: Colors.white24),
+            Divider(color: BazaaroTheme.app.brandOnInk.withValues(alpha: 0.24)),
             _Row(
               label: 'Payable',
               value: '${BazaaroBrand.currency} ${cart.total}',
@@ -187,7 +179,7 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = TextStyle(
-      color: Colors.white,
+      color: BazaaroTheme.app.brandOnInk,
       fontWeight: strong ? FontWeight.w900 : FontWeight.w600,
     );
     return Padding(

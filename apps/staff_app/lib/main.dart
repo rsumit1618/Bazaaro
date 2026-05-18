@@ -23,9 +23,27 @@ class StaffDashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Bazaaro Staff')),
-      body: ListView(
+    return DashboardShell(
+      title: 'Bazaaro Staff',
+      destinations: const [
+        NavigationRailDestination(
+          icon: Icon(Icons.dashboard_outlined),
+          label: Text('Dashboard'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.inventory_2_outlined),
+          label: Text('Inventory'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.local_shipping_outlined),
+          label: Text('Orders'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.support_agent_outlined),
+          label: Text('Support'),
+        ),
+      ],
+      child: ListView(
         padding: const EdgeInsets.all(16),
         children: const [
           StatCard(

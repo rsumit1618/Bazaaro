@@ -15,7 +15,7 @@ class BazaaroTheme {
   static const ink = Color(0xFF080A0F);
 
   static ThemeData light() {
-    final appTheme = BazaaroAppTheme.light();
+    const appTheme = BazaaroAppTheme.light;
     final scheme = ColorScheme.fromSeed(seedColor: ocean, secondary: ember);
 
     return ThemeData(
@@ -46,5 +46,5 @@ class BazaaroTheme {
     );
   }
 
-  static BazaaroAppTheme get app => BazaaroAppTheme.light();
+  static BazaaroAppTheme get app => BazaaroAppTheme.light;
 }

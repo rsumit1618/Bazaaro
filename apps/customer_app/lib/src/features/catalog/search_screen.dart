@@ -36,154 +36,157 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final feed = ref.watch(homeFeedProvider);
-    return Scaffold(
-      appBar: AppBar(title: const Text('Search Bazaaro')),
-      body: feed.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) =>
-            EmptyState(title: 'Search failed', message: error.toString()),
-        data: (data) {
-          return Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1180),
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  TextField(
-                    controller: _query,
-                    autofocus: true,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      hintText: 'Search watch, shoes, grocery, beauty...',
-                    ),
-                    onChanged: (_) => _emitCriteria(),
+    return feed.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => EmptyState(
+        title: 'Search failed',
+        message: error.toString(),
+        icon: Icons.error_outline,
+        action: FilledButton.icon(
+          onPressed: () => ref.invalidate(homeFeedProvider),
+          icon: const Icon(Icons.refresh),
+          label: const Text('Retry'),
+        ),
+      ),
+      data: (data) {
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1180),
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                TextField(
+                  controller: _query,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    hintText: 'Search watch, shoes, grocery, beauty...',
                   ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 42,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: data.categories.length + 1,
-                      separatorBuilder: (_, __) => const SizedBox(width: 8),
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return ChoiceChip(
-                            selected: _categoryId == null,
-                            label: const Text('All'),
-                            onSelected: (_) {
-                              setState(() => _categoryId = null);
-                              _emitCriteria();
-                            },
-                          );
-                        }
-                        final category = data.categories[index - 1];
+                  onChanged: (_) => _emitCriteria(),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  height: 42,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: data.categories.length + 1,
+                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
                         return ChoiceChip(
-                          selected: _categoryId == category.id,
-                          label: Text(category.name),
+                          selected: _categoryId == null,
+                          label: const Text('All'),
                           onSelected: (_) {
-                            setState(() => _categoryId = category.id);
+                            setState(() => _categoryId = null);
                             _emitCriteria();
                           },
                         );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  SegmentedButton<String>(
-                    segments: const [
-                      ButtonSegment(
-                        value: 'featured',
-                        label: Text('Popular'),
-                        icon: Icon(Icons.local_fire_department_outlined),
-                      ),
-                      ButtonSegment(
-                        value: 'priceLow',
-                        label: Text('Low'),
-                        icon: Icon(Icons.south_east),
-                      ),
-                      ButtonSegment(
-                        value: 'priceHigh',
-                        label: Text('High'),
-                        icon: Icon(Icons.north_east),
-                      ),
-                    ],
-                    selected: {_sort},
-                    onSelectionChanged: (value) {
-                      setState(() => _sort = value.first);
-                      _emitCriteria();
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  AppStreamBuilder<List<Product>>(
-                    stream: _criteria
-                        .debounceTime(const Duration(milliseconds: 220))
-                        .map((criteria) => _filter(data.bestSellers, criteria))
-                        .shareReplay(maxSize: 1),
-                    initialData: _filter(data.bestSellers, _criteria.value),
-
-                    emptyBuilder: (_) => const EmptyState(
-                      title: 'No products found',
-                      message: 'Try a different keyword or filter.',
-                      icon: Icons.search_off,
-                    ),
-                    builder: (context, products) {
-                      final items = products ?? const <Product>[];
-                      if (items.isEmpty) {
-                        return const EmptyState(
-                          title: 'No products found',
-                          message: 'Try a different keyword or filter.',
-                          icon: Icons.search_off,
-                        );
                       }
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${items.length} products found',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w900),
-                          ),
-                          const SizedBox(height: 12),
-                          GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: items.length,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: Responsive.gridColumns(
-                                    context,
-                                  ),
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 12,
-                                  mainAxisExtent: 326,
-                                ),
-                            itemBuilder: (context, index) {
-                              final product = items[index];
-                              return ProductCard(
-                                product: product,
-                                onTap: () =>
-                                    context.push('/product/${product.id}'),
-                                onAddToCart: () {
-                                  ref.read(cartProvider.notifier).add(product);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('${product.title} added'),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ],
+                      final category = data.categories[index - 1];
+                      return ChoiceChip(
+                        selected: _categoryId == category.id,
+                        label: Text(category.name),
+                        onSelected: (_) {
+                          setState(() => _categoryId = category.id);
+                          _emitCriteria();
+                        },
                       );
                     },
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 12),
+                SegmentedButton<String>(
+                  segments: const [
+                    ButtonSegment(
+                      value: 'featured',
+                      label: Text('Popular'),
+                      icon: Icon(Icons.local_fire_department_outlined),
+                    ),
+                    ButtonSegment(
+                      value: 'priceLow',
+                      label: Text('Low'),
+                      icon: Icon(Icons.south_east),
+                    ),
+                    ButtonSegment(
+                      value: 'priceHigh',
+                      label: Text('High'),
+                      icon: Icon(Icons.north_east),
+                    ),
+                  ],
+                  selected: {_sort},
+                  onSelectionChanged: (value) {
+                    setState(() => _sort = value.first);
+                    _emitCriteria();
+                  },
+                ),
+                const SizedBox(height: 16),
+                AppStreamBuilder<List<Product>>(
+                  stream: _criteria
+                      .debounceTime(const Duration(milliseconds: 220))
+                      .map((criteria) => _filter(data.bestSellers, criteria))
+                      .shareReplay(maxSize: 1),
+                  initialData: _filter(data.bestSellers, _criteria.value),
+
+                  emptyBuilder: (_) => const EmptyState(
+                    title: 'No products found',
+                    message: 'Try a different keyword or filter.',
+                    icon: Icons.search_off,
+                  ),
+                  builder: (context, products) {
+                    final items = products ?? const <Product>[];
+                    if (items.isEmpty) {
+                      return const EmptyState(
+                        title: 'No products found',
+                        message: 'Try a different keyword or filter.',
+                        icon: Icons.search_off,
+                      );
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${items.length} products found',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w900),
+                        ),
+                        const SizedBox(height: 12),
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: items.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: Responsive.gridColumns(context),
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                mainAxisExtent: 326,
+                              ),
+                          itemBuilder: (context, index) {
+                            final product = items[index];
+                            return ProductCard(
+                              product: product,
+                              onTap: () =>
+                                  context.push('/product/${product.id}'),
+                              onAddToCart: () {
+                                ref.read(cartProvider.notifier).add(product);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('${product.title} added'),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
