@@ -4,11 +4,28 @@ Bazaaro is a Flutter e-commerce monorepo for customer, admin, seller, and staff 
 
 Tagline: **Shop Smart. Live Better.**
 
+Live web app: [Bazaaro on GitHub Pages](https://rsumit1618.github.io/Bazaaro---Shop-Smart-Live-Better./)
+
+![Bazaaro web home](docs/screenshots/web-home.png)
+
 Primary domains:
 
 - Customer: `bazaaro.in`
 - Admin: `admin.bazaaro.in`
 - Seller: `seller.bazaaro.in`
+
+## Demo Users
+
+Use these demo records when seeding Firebase Realtime Database or reviewing role-based flows:
+
+| Role | Name | Email | Password |
+| --- | --- | --- | --- |
+| Customer | Aarav Sharma | `aarav.sharma@bazaaro.in` | `Demo@12345` |
+| Admin | Meera Iyer | `admin@bazaaro.in` | `Demo@12345` |
+| Seller | Bazaaro Select Seller | `seller@bazaaro.in` | `Demo@12345` |
+| Staff | Kabir Khan | `staff@bazaaro.in` | `Demo@12345` |
+
+More UI screenshots are available in [Screenshots](docs/SCREENSHOTS.md).
 
 ## Current Focus
 
