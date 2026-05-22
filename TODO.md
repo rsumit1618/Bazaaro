@@ -37,5 +37,5 @@
 - [x] Remove known analyzer cleanup items related to this work
 - [x] Ask for confirmation before running any build, test, analyze, or deploy command
 - [x] Push source changes after owner review
-- [ ] Publish/update GitHub Pages after owner approval for build/deploy commands
+- [x] Publish/update GitHub Pages after owner approval for build/deploy commands
 
