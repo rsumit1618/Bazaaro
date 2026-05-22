@@ -4,32 +4,22 @@ These screenshots show the current customer app UI across mobile-sized and deskt
 
 ## Mobile
 
-### Home
-
-![Bazaaro mobile home](screenshots/mobile-home.jpeg)
-
-### Search
-
-![Bazaaro mobile search](screenshots/mobile-search.jpeg)
-
-### Categories
-
-![Bazaaro mobile categories](screenshots/mobile-categories.jpeg)
-
-### Profile
-
-![Bazaaro mobile profile](screenshots/mobile-profile.jpeg)
+| Home | Search |
+| --- | --- |
+| <img src="screenshots/mobile-home.jpeg" alt="Bazaaro mobile home" width="260"> | <img src="screenshots/mobile-search.jpeg" alt="Bazaaro mobile search" width="260"> |
+| Categories | Profile |
+| <img src="screenshots/mobile-categories.jpeg" alt="Bazaaro mobile categories" width="260"> | <img src="screenshots/mobile-profile.jpeg" alt="Bazaaro mobile profile" width="260"> |
 
 ## Web
 
 ### Home
 
-![Bazaaro web home](screenshots/web-home.png)
+<img src="screenshots/web-home.png" alt="Bazaaro web home" width="720">
 
 ### Featured Products
 
-![Bazaaro web featured products](screenshots/web-featured.png)
+<img src="screenshots/web-featured.png" alt="Bazaaro web featured products" width="720">
 
 ### Search
 
-![Bazaaro web search](screenshots/web-search.png)
+<img src="screenshots/web-search.png" alt="Bazaaro web search" width="720">

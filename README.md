@@ -6,7 +6,7 @@ Tagline: **Shop Smart. Live Better.**
 
 Live web app: [Bazaaro on GitHub Pages](https://rsumit1618.github.io/Bazaaro/)
 
-![Bazaaro web home](docs/screenshots/web-home.png)
+<img src="docs/screenshots/web-home.png" alt="Bazaaro web home" width="720">
 
 Primary domains:
 
@@ -29,21 +29,19 @@ Use these demo records when seeding Firebase Realtime Database or reviewing role
 
 ### Web
 
-![Bazaaro web home](docs/screenshots/web-home.png)
+<img src="docs/screenshots/web-home.png" alt="Bazaaro web home" width="720">
 
-![Bazaaro web featured products](docs/screenshots/web-featured.png)
+<img src="docs/screenshots/web-featured.png" alt="Bazaaro web featured products" width="720">
 
-![Bazaaro web search](docs/screenshots/web-search.png)
+<img src="docs/screenshots/web-search.png" alt="Bazaaro web search" width="720">
 
 ### Mobile
 
-![Bazaaro mobile home](docs/screenshots/mobile-home.jpeg)
-
-![Bazaaro mobile search](docs/screenshots/mobile-search.jpeg)
-
-![Bazaaro mobile categories](docs/screenshots/mobile-categories.jpeg)
-
-![Bazaaro mobile profile](docs/screenshots/mobile-profile.jpeg)
+| Home | Search |
+| --- | --- |
+| <img src="docs/screenshots/mobile-home.jpeg" alt="Bazaaro mobile home" width="260"> | <img src="docs/screenshots/mobile-search.jpeg" alt="Bazaaro mobile search" width="260"> |
+| Categories | Profile |
+| <img src="docs/screenshots/mobile-categories.jpeg" alt="Bazaaro mobile categories" width="260"> | <img src="docs/screenshots/mobile-profile.jpeg" alt="Bazaaro mobile profile" width="260"> |
 
 More screenshot notes are available in [Screenshots](docs/SCREENSHOTS.md).
 
