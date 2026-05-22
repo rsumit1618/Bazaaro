@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../theme/bazaaro_theme.dart';
+
 class SkeletonBox extends StatelessWidget {
   const SkeletonBox({
     super.key,
@@ -16,13 +18,13 @@ class SkeletonBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
+      baseColor: BazaaroTheme.app.softSurface,
+      highlightColor: BazaaroTheme.app.cardBackground,
       child: Container(
         height: height,
         width: width,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: BazaaroTheme.app.cardBackground,
           borderRadius: BorderRadius.circular(radius),
         ),
       ),

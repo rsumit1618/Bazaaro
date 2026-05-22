@@ -16,25 +16,42 @@ class CartScreen extends ConsumerWidget {
     return AppStreamConsumer<List<CartLine>>(
       stream: controller.stream,
       initialData: ref.watch(cartProvider),
-      emptyBuilder: (_) => const EmptyState(
+      emptyBuilder: (_) => EmptyState(
         title: 'Your cart is waiting',
         message:
             'Add products from the home feed and checkout with your delivery details.',
         icon: Icons.shopping_cart_outlined,
+        action: FilledButton.icon(
+          onPressed: () => context.go('/'),
+          icon: const Icon(Icons.home_outlined),
+          label: const Text('Go to home'),
+        ),
       ),
       builder: (context, cart) {
         final items = cart ?? const <CartLine>[];
         if (items.isEmpty) {
-          return const EmptyState(
+          return EmptyState(
             title: 'Your cart is waiting',
             message:
                 'Add products from the home feed and checkout with your delivery details.',
             icon: Icons.shopping_cart_outlined,
+            action: FilledButton.icon(
+              onPressed: () => context.go('/'),
+              icon: const Icon(Icons.home_outlined),
+              label: const Text('Go to home'),
+            ),
           );
         }
         return BazaaroFeaturePage(
           title: 'Shopping cart',
           maxWidth: 920,
+          actions: [
+            TextButton.icon(
+              onPressed: () => context.go('/'),
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Home'),
+            ),
+          ],
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

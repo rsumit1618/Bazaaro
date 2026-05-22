@@ -101,12 +101,40 @@
                                                 "email":  "aarav.sharma@bazaaro.in",
                                                 "phone":  "+91 98765 43210",
                                                 "role":  "customer",
+                                                "demoPassword":  "Demo@12345",
+                                                "isDemoUser":  true,
+                                                "createdAt":  "2026-05-22T00:00:00+05:30",
                                                 "status":  "active"
                                             },
+                  "admin-meera-iyer":  {
+                                           "name":  "Meera Iyer",
+                                           "email":  "admin@bazaaro.in",
+                                           "phone":  "+91 98765 43211",
+                                           "role":  "admin",
+                                           "demoPassword":  "Demo@12345",
+                                           "isDemoUser":  true,
+                                           "createdAt":  "2026-05-22T00:00:00+05:30",
+                                           "status":  "active"
+                                       },
                   "seller-bazaaro-select":  {
                                                 "name":  "Bazaaro Select Seller",
                                                 "email":  "seller@bazaaro.in",
+                                                "phone":  "+91 98765 43212",
                                                 "role":  "seller",
+                                                "demoPassword":  "Demo@12345",
+                                                "isDemoUser":  true,
+                                                "createdAt":  "2026-05-22T00:00:00+05:30",
+                                                "status":  "active"
+                                            },
+                  "staff-kabir-khan":  {
+                                           "name":  "Kabir Khan",
+                                           "email":  "staff@bazaaro.in",
+                                           "phone":  "+91 98765 43213",
+                                           "role":  "orderManager",
+                                           "staffRole":  "staff",
+                                           "demoPassword":  "Demo@12345",
+                                           "isDemoUser":  true,
+                                           "createdAt":  "2026-05-22T00:00:00+05:30",
                                                 "status":  "active"
                                             }
               },

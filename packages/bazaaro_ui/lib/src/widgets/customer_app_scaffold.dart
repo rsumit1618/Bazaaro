@@ -122,7 +122,15 @@ class CustomerAppScaffold extends StatelessWidget {
                 _CartIconButton(cartCount: cartCount),
               ],
       ),
-      body: child,
+      body: ColoredBox(
+        color: BazaaroTheme.app.scaffoldBackground,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 180),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeOutCubic,
+          child: KeyedSubtree(key: ValueKey(location), child: child),
+        ),
+      ),
       bottomNavigationBar: isWide
           ? null
           : NavigationBar(
@@ -139,6 +147,14 @@ class CustomerAppScaffold extends StatelessWidget {
     required String location,
   }) {
     if (isWide) return null;
+
+    if (location == '/cart') {
+      return IconButton(
+        icon: const Icon(Icons.arrow_back),
+        tooltip: 'Home',
+        onPressed: () => context.go('/'),
+      );
+    }
 
     return Builder(
       builder: (context) => IconButton(

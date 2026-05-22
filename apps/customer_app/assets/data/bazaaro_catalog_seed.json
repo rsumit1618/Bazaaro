@@ -14,13 +14,35 @@
       "email": "aarav.sharma@bazaaro.in",
       "phone": "+91 98765 43210",
       "role": "customer",
+      "demoPassword": "Demo@12345",
+      "status": "active"
+    },
+    {
+      "uid": "admin-meera-iyer",
+      "name": "Meera Iyer",
+      "email": "admin@bazaaro.in",
+      "phone": "+91 98765 43211",
+      "role": "admin",
+      "demoPassword": "Demo@12345",
       "status": "active"
     },
     {
       "uid": "seller-bazaaro-select",
       "name": "Bazaaro Select Seller",
       "email": "seller@bazaaro.in",
+      "phone": "+91 98765 43212",
       "role": "seller",
+      "demoPassword": "Demo@12345",
+      "status": "active"
+    },
+    {
+      "uid": "staff-kabir-khan",
+      "name": "Kabir Khan",
+      "email": "staff@bazaaro.in",
+      "phone": "+91 98765 43213",
+      "role": "orderManager",
+      "staffRole": "staff",
+      "demoPassword": "Demo@12345",
       "status": "active"
     }
   ],

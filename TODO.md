@@ -26,3 +26,16 @@
 - [x] Run `dart analyze`
 - [x] Run `dart format`
 
+## Phase 6: GitHub Pages readiness + demo polish
+- [x] Confirm completed vs pending work with the project owner before starting
+- [x] Make the GitHub Pages live link visible from the root README
+- [x] Add demo users for customer, admin, seller, and staff roles to database seed data
+- [x] Document demo role users in the root README for immediate reviewer access
+- [x] Fix cart navigation so users can clearly return home from the cart screen
+- [x] Improve initial tab/route rendering so a grey blank screen does not flash before UI
+- [x] Keep screenshots and first-use docs visible from root project documentation
+- [x] Remove known analyzer cleanup items related to this work
+- [x] Ask for confirmation before running any build, test, analyze, or deploy command
+- [x] Push source changes after owner review
+- [ ] Publish/update GitHub Pages after owner approval for build/deploy commands
+
