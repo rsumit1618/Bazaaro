@@ -38,4 +38,3 @@
 - [x] Ask for confirmation before running any build, test, analyze, or deploy command
 - [x] Push source changes after owner review
 - [x] Publish/update GitHub Pages after owner approval for build/deploy commands
-
